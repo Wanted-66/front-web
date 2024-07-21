@@ -1,0 +1,116 @@
+.navigationBar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: white;
+    padding: 10px 0px 0px 0px;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.counter {
+    font-size: 36px;
+    font-weight: bold;
+    text-align: center;
+    flex-grow: 1;
+    margin:0;
+    padding:0
+}
+
+.counter img{
+    max-width: 64px;
+    width: 100%;
+    height: auto;
+}
+
+.notification {
+    position: relative;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    width: 50px; /* 너비를 설정하여 우측 정렬이 잘 되도록 합니다. */
+}
+
+.notification img {
+    width: 24px;
+    height: 24px;
+}
+
+.notificationBadge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: red;
+    color: white;
+    border-radius: 50%;
+    padding: 2px 5px;
+    font-size: 12px;
+}
+
+
+
+.bottomNavigationBar {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background-color: #2a5783;
+    padding: 10px 0;
+    border-top: 1px solid #e0e0e0;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    z-index: 0; /* 원이 네비게이션 바 위로 오도록 설정 */
+}
+
+.circleContainer {
+    position: absolute;
+    bottom: 15px; /* 네비게이션 바의 높이와 겹치지 않도록 조절 */
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background-color: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    z-index: 1; /* 네비게이션 바 위로 오도록 설정 */
+    flex-direction: column;
+    color: #333;
+}
+
+.bottomCounter {
+    font-size: 36px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.circle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100px; /* 내부 원의 크기 조절 */
+    height: 100px; /* 내부 원의 크기 조절 */
+    border-radius: 50%;
+    background-color: #ffffff; /* 내부 원의 색상 */
+}
+
+.bottomCounter img{
+    max-width: 64px;
+    width: 100%;
+    height: auto;
+}
+
+.navItem {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 12px;
+    color: #333;
+}
+
+.navItem img {
+    width: 24px;
+    height: 24px;
+    margin-bottom: 5px;
+}
