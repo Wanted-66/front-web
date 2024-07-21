@@ -1,0 +1,138 @@
+@import url("https://webfontworld.github.io/seoulhangang/SeoulHangangC.css");
+@font-face {
+  font-family: "SeoulHangangC";
+  font-weight: 300;
+  font-style: normal;
+  src: url("https://cdn.jsdelivr.net/gh/webfontworld/seoulhangang/SeoulHangangCLight.eot");
+  src: url("https://cdn.jsdelivr.net/gh/webfontworld/seoulhangang/SeoulHangangCLight.eot?#iefix")
+      format("embedded-opentype"),
+    url("https://cdn.jsdelivr.net/gh/webfontworld/seoulhangang/SeoulHangangCLight.woff2")
+      format("woff2"),
+    url("https://cdn.jsdelivr.net/gh/webfontworld/seoulhangang/SeoulHangangCLight.woff")
+      format("woff"),
+    url("https://cdn.jsdelivr.net/gh/webfontworld/seoulhangang/SeoulHangangCLight.ttf")
+      format("truetype");
+  font-display: swap;
+}
+@font-face {
+  font-family: "SeoulHangangC";
+  font-weight: 500;
+  font-style: normal;
+  src: url("https://cdn.jsdelivr.net/gh/webfontworld/seoulhangang/SeoulHangangCMedium.eot");
+  src: url("https://cdn.jsdelivr.net/gh/webfontworld/seoulhangang/SeoulHangangCMedium.eot?#iefix")
+      format("embedded-opentype"),
+    url("https://cdn.jsdelivr.net/gh/webfontworld/seoulhangang/SeoulHangangCMedium.woff2")
+      format("woff2"),
+    url("https://cdn.jsdelivr.net/gh/webfontworld/seoulhangang/SeoulHangangCMedium.woff")
+      format("woff"),
+    url("https://cdn.jsdelivr.net/gh/webfontworld/seoulhangang/SeoulHangangCMedium.ttf")
+      format("truetype");
+  font-display: swap;
+}
+@font-face {
+  font-family: "SeoulHangangC";
+  font-weight: 700;
+  font-style: normal;
+  src: url("https://cdn.jsdelivr.net/gh/webfontworld/seoulhangang/SeoulHangangCBold.eot");
+  src: url("https://cdn.jsdelivr.net/gh/webfontworld/seoulhangang/SeoulHangangCBold.eot?#iefix")
+      format("embedded-opentype"),
+    url("https://cdn.jsdelivr.net/gh/webfontworld/seoulhangang/SeoulHangangCBold.woff2")
+      format("woff2"),
+    url("https://cdn.jsdelivr.net/gh/webfontworld/seoulhangang/SeoulHangangCBold.woff")
+      format("woff"),
+    url("https://cdn.jsdelivr.net/gh/webfontworld/seoulhangang/SeoulHangangCBold.ttf")
+      format("truetype");
+  font-display: swap;
+}
+@font-face {
+  font-family: "SeoulHangangC";
+  font-weight: 900;
+  font-style: normal;
+  src: url("https://cdn.jsdelivr.net/gh/webfontworld/seoulhangang/SeoulHangangCBlack.eot");
+  src: url("https://cdn.jsdelivr.net/gh/webfontworld/seoulhangang/SeoulHangangCBlack.eot?#iefix")
+      format("embedded-opentype"),
+    url("https://cdn.jsdelivr.net/gh/webfontworld/seoulhangang/SeoulHangangCBlack.woff2")
+      format("woff2"),
+    url("https://cdn.jsdelivr.net/gh/webfontworld/seoulhangang/SeoulHangangCBlack.woff")
+      format("woff"),
+    url("https://cdn.jsdelivr.net/gh/webfontworld/seoulhangang/SeoulHangangCBlack.ttf")
+      format("truetype");
+  font-display: swap;
+}
+body {
+  font-family: "SeoulHangangC", sans-serif;
+  background-color: #f0f2f5;
+}
+
+.ant-layout-content {
+  padding: 0 50px;
+}
+
+.ant-avatar-group {
+  margin: 0 auto;
+}
+
+.ant-calendar {
+  border-radius: 16px;
+  overflow: hidden;
+  width: 500px;
+  height: 800px;
+}
+
+.calendar-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+}
+
+body {
+  background-color: #f0f2f5;
+}
+
+.avatar-group-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  max-width: 100%;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 50px;
+}
+
+.ant-avatar {
+  margin: 0 4px;
+}
+
+.text-d-day-wrapper {
+  position: relative;
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.text-d-day-wrapper::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  height: 0.25px;
+  background-color: #d3d3d3;
+}
+
+.text-d-day {
+  font-family: "SeoulHangangC", sans-serif;
+  font-size: 24px;
+  font-weight: 900;
+  text-align: left;
+  margin-bottom: 20px;
+}
+
+.text-quote {
+  font-family: "SeoulHangangC", sans-serif;
+  font-size: 30px;
+  font-weight: 700;
+  text-align: center;
+  margin-top: 70px;
+}
