@@ -5,6 +5,12 @@ import "./main.css";
 
 const { Content, Footer } = Layout;
 
+const postsData = [
+  { userId: "user1", content: "User 1의 게시글 내용입니다." },
+  { userId: "user2", content: "User 2의 게시글 내용입니다." },
+  // 필요한 만큼 게시글 데이터 추가
+];
+
 const Main = () => {
   const [avatars, setAvatars] = useState([]); //초기 빈배열
 
@@ -30,12 +36,14 @@ const Main = () => {
         >
           <div className="avatar-group-container">
             {avatars.map((src, index) => (
-              <Avatar
-                key={index}
-                src={src}
-                size={125}
-                style={{ boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)" }}
-              />
+              <div key={index} className="avatar-wrapper">
+                <Avatar
+                  key={index}
+                  src={src}
+                  size={125}
+                  style={{ boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)" }}
+                />
+              </div>
             ))}
           </div>
         </div>

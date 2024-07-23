@@ -92,16 +92,24 @@ body {
 
 .avatar-group-container {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 16px;
   max-width: 100%;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
+  overflow-x: auto;
   margin-bottom: 50px;
+  padding: 10px 0;
+  white-space: nowrap;
 }
 
 .ant-avatar {
   margin: 0 4px;
+}
+
+.avatar-wrapper {
+  flex: 0 0 auto; /* 아바타가 줄 바꿈되지 않도록 설정 */
+  margin-right: 10px; /* 아바타 간 간격 설정 */
 }
 
 .text-d-day-wrapper {
@@ -132,7 +140,7 @@ body {
 .text-quote {
   font-family: "SeoulHangangC", sans-serif;
   font-size: 30px;
-  font-weight: 700;
+  font-weight: 7git add 0;
   text-align: center;
   margin-top: 70px;
 }

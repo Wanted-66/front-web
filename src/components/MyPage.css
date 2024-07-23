@@ -1,0 +1,124 @@
+@import url("https://webfontworld.github.io/seoulhangang/SeoulHangangC.css");
+@font-face {
+  font-family: "SeoulHangangC";
+  font-weight: 300;
+  font-style: normal;
+  src: url("https://cdn.jsdelivr.net/gh/webfontworld/seoulhangang/SeoulHangangCLight.eot");
+  src: url("https://cdn.jsdelivr.net/gh/webfontworld/seoulhangang/SeoulHangangCLight.eot?#iefix")
+      format("embedded-opentype"),
+    url("https://cdn.jsdelivr.net/gh/webfontworld/seoulhangang/SeoulHangangCLight.woff2")
+      format("woff2"),
+    url("https://cdn.jsdelivr.net/gh/webfontworld/seoulhangang/SeoulHangangCLight.woff")
+      format("woff"),
+    url("https://cdn.jsdelivr.net/gh/webfontworld/seoulhangang/SeoulHangangCLight.ttf")
+      format("truetype");
+  font-display: swap;
+}
+@font-face {
+  font-family: "SeoulHangangC";
+  font-weight: 500;
+  font-style: normal;
+  src: url("https://cdn.jsdelivr.net/gh/webfontworld/seoulhangang/SeoulHangangCMedium.eot");
+  src: url("https://cdn.jsdelivr.net/gh/webfontworld/seoulhangang/SeoulHangangCMedium.eot?#iefix")
+      format("embedded-opentype"),
+    url("https://cdn.jsdelivr.net/gh/webfontworld/seoulhangang/SeoulHangangCMedium.woff2")
+      format("woff2"),
+    url("https://cdn.jsdelivr.net/gh/webfontworld/seoulhangang/SeoulHangangCMedium.woff")
+      format("woff"),
+    url("https://cdn.jsdelivr.net/gh/webfontworld/seoulhangang/SeoulHangangCMedium.ttf")
+      format("truetype");
+  font-display: swap;
+}
+@font-face {
+  font-family: "SeoulHangangC";
+  font-weight: 700;
+  font-style: normal;
+  src: url("https://cdn.jsdelivr.net/gh/webfontworld/seoulhangang/SeoulHangangCBold.eot");
+  src: url("https://cdn.jsdelivr.net/gh/webfontworld/seoulhangang/SeoulHangangCBold.eot?#iefix")
+      format("embedded-opentype"),
+    url("https://cdn.jsdelivr.net/gh/webfontworld/seoulhangang/SeoulHangangCBold.woff2")
+      format("woff2"),
+    url("https://cdn.jsdelivr.net/gh/webfontworld/seoulhangang/SeoulHangangCBold.woff")
+      format("woff"),
+    url("https://cdn.jsdelivr.net/gh/webfontworld/seoulhangang/SeoulHangangCBold.ttf")
+      format("truetype");
+  font-display: swap;
+}
+@font-face {
+  font-family: "SeoulHangangC";
+  font-weight: 900;
+  font-style: normal;
+  src: url("https://cdn.jsdelivr.net/gh/webfontworld/seoulhangang/SeoulHangangCBlack.eot");
+  src: url("https://cdn.jsdelivr.net/gh/webfontworld/seoulhangang/SeoulHangangCBlack.eot?#iefix")
+      format("embedded-opentype"),
+    url("https://cdn.jsdelivr.net/gh/webfontworld/seoulhangang/SeoulHangangCBlack.woff2")
+      format("woff2"),
+    url("https://cdn.jsdelivr.net/gh/webfontworld/seoulhangang/SeoulHangangCBlack.woff")
+      format("woff"),
+    url("https://cdn.jsdelivr.net/gh/webfontworld/seoulhangang/SeoulHangangCBlack.ttf")
+      format("truetype");
+  font-display: swap;
+}
+
+body {
+  font-family: "SeoulHangangC", sans-serif;
+}
+
+.my-page {
+  width: 100px;
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: center;
+  font-family: "SeoulHangangC", sans-serif;
+}
+
+.profile {
+  margin-bottom: 20px;
+}
+
+.profile-image {
+  width: 500px;
+  height: 500px;
+  margin: 0 auto;
+  border-radius: 50%;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.name {
+  font-size: 125px;
+  font-weight: 700;
+  margin-bottom: 0;
+}
+
+.title {
+  font-size: 50px;
+}
+
+.info-section,
+.history-section {
+  margin-bottom: 20px;
+}
+
+h2 {
+  font-size: 100px;
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+li {
+  font-size: 50px;
+  margin: 5px 0;
+  text-align: left;
+  margin-bottom: 15px;
+}
+@media (min-width: 768px) {
+  .my-page {
+    width: 50%;
+  }
+}
