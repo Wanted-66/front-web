@@ -1,0 +1,191 @@
+@import url("https://webfontworld.github.io/seoulhangang/SeoulHangangC.css");
+
+@font-face {
+  font-family: "SeoulHangangC";
+  font-weight: 300;
+  font-style: normal;
+  src: url("https://cdn.jsdelivr.net/gh/webfontworld/seoulhangang/SeoulHangangCLight.eot");
+  src: url("https://cdn.jsdelivr.net/gh/webfontworld/seoulhangang/SeoulHangangCLight.eot?#iefix")
+      format("embedded-opentype"),
+    url("https://cdn.jsdelivr.net/gh/webfontworld/seoulhangang/SeoulHangangCLight.woff2")
+      format("woff2"),
+    url("https://cdn.jsdelivr.net/gh/webfontworld/seoulhangang/SeoulHangangCLight.woff")
+      format("woff"),
+    url("https://cdn.jsdelivr.net/gh/webfontworld/seoulhangang/SeoulHangangCLight.ttf")
+      format("truetype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "SeoulHangangC";
+  font-weight: 500;
+  font-style: normal;
+  src: url("https://cdn.jsdelivr.net/gh/webfontworld/seoulhangang/SeoulHangangCMedium.eot");
+  src: url("https://cdn.jsdelivr.net/gh/webfontworld/seoulhangang/SeoulHangangCMedium.eot?#iefix")
+      format("embedded-opentype"),
+    url("https://cdn.jsdelivr.net/gh/webfontworld/seoulhangang/SeoulHangangCMedium.woff2")
+      format("woff2"),
+    url("https://cdn.jsdelivr.net/gh/webfontworld/seoulhangang/SeoulHangangCMedium.woff")
+      format("woff"),
+    url("https://cdn.jsdelivr.net/gh/webfontworld/seoulhangang/SeoulHangangCMedium.ttf")
+      format("truetype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "SeoulHangangC";
+  font-weight: 700;
+  font-style: normal;
+  src: url("https://cdn.jsdelivr.net/gh/webfontworld/seoulhangang/SeoulHangangCBold.eot");
+  src: url("https://cdn.jsdelivr.net/gh/webfontworld/seoulhangang/SeoulHangangCBold.eot?#iefix")
+      format("embedded-opentype"),
+    url("https://cdn.jsdelivr.net/gh/webfontworld/seoulhangang/SeoulHangangCBold.woff2")
+      format("woff2"),
+    url("https://cdn.jsdelivr.net/gh/webfontworld/seoulhangang/SeoulHangangCBold.woff")
+      format("woff"),
+    url("https://cdn.jsdelivr.net/gh/webfontworld/seoulhangang/SeoulHangangCBold.ttf")
+      format("truetype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "SeoulHangangC";
+  font-weight: 900;
+  font-style: normal;
+  src: url("https://cdn.jsdelivr.net/gh/webfontworld/seoulhangang/SeoulHangangCBlack.eot");
+  src: url("https://cdn.jsdelivr.net/gh/webfontworld/seoulhangang/SeoulHangangCBlack.eot?#iefix")
+      format("embedded-opentype"),
+    url("https://cdn.jsdelivr.net/gh/webfontworld/seoulhangang/SeoulHangangCBlack.woff2")
+      format("woff2"),
+    url("https://cdn.jsdelivr.net/gh/webfontworld/seoulhangang/SeoulHangangCBlack.woff")
+      format("woff"),
+    url("https://cdn.jsdelivr.net/gh/webfontworld/seoulhangang/SeoulHangangCBlack.ttf")
+      format("truetype");
+  font-display: swap;
+}
+/* 전체 포스트 상세 페이지 */
+.post-detail-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: "SeoulHangangC", sans-serif;
+  background: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* 포스트 제목 */
+.post-title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #333;
+  border-bottom: 2px solid #e1e1e1;
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+}
+
+/* 포스트 이미지 */
+.post-image {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  margin-bottom: 20px;
+}
+
+/* 포스트 정보 */
+.post-info {
+  margin-bottom: 20px;
+  padding: 15px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.post-info p {
+  margin: 10px 0;
+  color: #333;
+  font-size: 1.2rem; /* 글씨 크기 증가 */
+}
+
+.post-info p strong {
+  font-weight: bold;
+  color: #000;
+  font-size: 1.4rem; /* 라벨 글씨 크기 증가 */
+}
+
+/* 댓글 섹션 */
+.comments-section {
+  margin-top: 20px;
+}
+
+.comments-section h2 {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+/* 댓글 입력창 */
+.comment-input-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.comment-input-container textarea {
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  padding: 10px;
+  font-size: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* 댓글 버튼 */
+.comment-input-container button {
+  border-radius: 8px;
+  border: none;
+  padding: 10px;
+  background: linear-gradient(135deg, #6253e1, #04befe);
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: background 0.3s;
+}
+
+.comment-input-container button:hover {
+  background: linear-gradient(135deg, #04befe, #6253e1);
+}
+
+/* 댓글 리스트 */
+.comments-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.comments-list .comment {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.comments-list .comment:last-child {
+  border-bottom: none;
+}
+
+.comments-list .comment p {
+  margin: 0;
+  color: #333;
+  font-size: 1rem;
+}
+
+.comments-list .comment .user {
+  color: #888;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

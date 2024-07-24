@@ -1,39 +1,15 @@
-/* 전체 컨테이너 스타일 */
-.register-container {
-  padding: 20px;
-  max-width: 800px;
-  margin: 0 auto;
-}
-
-/* 각 섹션 제목 스타일 */
-.section-title {
-  font-size: 30px;
+/* Card 제목의 스타일 */
+.card-title {
+  font-size: 26px; /* 제목 글씨 크기 */
   font-weight: bold;
-  margin-bottom: 16px;
 }
 
-/* 폼 필드 스타일 */
-.form-field {
-  margin-bottom: 16px;
+/* Card 내용의 스타일 */
+.card-content {
+  font-size: 20px; /* 내용 글씨 크기 */
 }
 
-/* 업로드 버튼 스타일 */
-.upload-button {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border: 1px dashed #d9d9d9;
-  border-radius: 2px;
-  width: 104px;
-  height: 104px;
-  cursor: pointer;
-}
-
-.upload-button:hover {
-  border-color: #1890ff;
-}
-
-/* Gradient 버튼 스타일 */
+/* GradientButton의 스타일 */
 .gradient-button.ant-btn-primary:not([disabled]):not(.ant-btn-dangerous) {
   border-width: 0;
 }

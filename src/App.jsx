@@ -5,6 +5,9 @@ import Main from "./main";
 import MyPage from "./components/MyPage";
 import Register from "./components/Register";
 import Arrest from "./components/Arrest";
+import List from "./components/List";
+import PostDetail from "./components/PostDetail";
+import LoginPage from "./components/LoginPage";
 import { DatePicker } from "antd";
 import { Button, message } from "antd";
 import { AntDesignOutlined } from "@ant-design/icons";
@@ -36,6 +39,9 @@ function App() {
           <Route path="/mypage" element={<MyPage />} />
           <Route path="/register" element={<Register />} />
           <Route path="/Arrest" element={<Arrest />} />
+          <Route path="/List" element={<List />} />
+          <Route path="/post/:postId" element={<PostDetail />} />
+          <Route path="Login" element={<LoginPage />} />
         </Routes>
         <BottomNavigationBar></BottomNavigationBar>
       </Router>

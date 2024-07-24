@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import "./Arrest.css";
 import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
-import { message, Upload, Select } from "antd";
+import { message, Upload, Select, Input, Button } from "antd";
+import { AntDesignOutlined } from "@ant-design/icons";
 
 const { Option } = Select;
+const { TextArea } = Input;
 
 const getBase64 = (img, callback) => {
   const reader = new FileReader();
@@ -44,6 +46,9 @@ const App = () => {
     setCategory(value);
     console.log(`selected ${value}`);
   };
+  const handleInputChange = (e) => {
+    console.log("Change:", e.target.value);
+  };
 
   const uploadButton = (
     <button style={{ border: 0, background: "none" }} type="button">
@@ -57,10 +62,10 @@ const App = () => {
       <div
         style={{ marginBottom: "20px", fontSize: "40px", fontWeight: "bold" }}
       >
-        어떤 수배를 진행 하실 건가요?
+        어떤 수배를 검거 하실 건가요?
       </div>
       {/* 카테고리 선택 컴포넌트 */}
-      <div style={{ marginBottom: "20px" }}>
+      <div style={{ marginBottom: "30px" }}>
         <Select
           showSearch
           placeholder="Select a category"
@@ -105,6 +110,27 @@ const App = () => {
             )}
           </Upload>
         </div>
+      </div>
+      <div style={{ marginTop: "0px" }}>
+        <TextArea
+          showCount
+          maxLength={100}
+          onChange={handleInputChange}
+          placeholder="상황 설명"
+          style={{ marginTop: "0px", height: 120, resize: "none" }}
+        />
+      </div>
+      {/* 오른쪽 정렬된 버튼 */}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "flex-end",
+          marginTop: "20px",
+        }}
+      >
+        <Button type="primary" size="large" icon={<AntDesignOutlined />}>
+          검거
+        </Button>
       </div>
     </div>
   );
