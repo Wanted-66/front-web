@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import "./Arrest.css";
-import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
+import {
+  LoadingOutlined,
+  PlusOutlined,
+  AntDesignOutlined,
+} from "@ant-design/icons";
 import { message, Upload, Select, Input, Button } from "antd";
-import { AntDesignOutlined } from "@ant-design/icons";
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -25,7 +28,7 @@ const beforeUpload = (file) => {
   return isJpgOrPng && isLt2M;
 };
 
-const App = () => {
+const Arrest = () => {
   const [loading, setLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState();
   const [category, setCategory] = useState("");
@@ -58,37 +61,25 @@ const App = () => {
   );
 
   return (
-    <div style={{ padding: "20px" }}>
-      <div
-        style={{ marginBottom: "20px", fontSize: "40px", fontWeight: "bold" }}
-      >
-        어떤 수배를 검거 하실 건가요?
-      </div>
-      {/* 카테고리 선택 컴포넌트 */}
-      <div style={{ marginBottom: "30px" }}>
-        <Select
-          showSearch
-          placeholder="Select a category"
-          optionFilterProp="label"
-          onChange={handleCategoryChange}
-          style={{ width: "100%" }}
-        >
-          <Option value="game">게임 중독</Option>
-          <Option value="smoke">흡연</Option>
-          <Option value="drink">술</Option>
-          <Option value="drink">릴스 중독</Option>
-        </Select>
-      </div>
-      <div
-        style={{ marginBottom: "20px", fontSize: "50px", fontWeight: "bold" }}
-      >
-        증거사진
-      </div>
-      <div style={{ display: "flex", gap: "16px", flexWrap: "wrap" }}>
-        <div
-          className="upload-container"
-          style={{ width: "600px", height: "600px" }} // 크기 바꾸는법?
-        >
+    <div className="arrest-container">
+      <div className="arrest-content">
+        {/* <div className="header">어떤 수배를 검거 하실 건가요?</div>
+        <div className="category-select">
+          <Select
+            showSearch
+            placeholder="Select a category"
+            optionFilterProp="label"
+            onChange={handleCategoryChange}
+            style={{ width: "100%" }}
+          >
+            <Option value="game">게임 중독</Option>
+            <Option value="smoke">흡연</Option>
+            <Option value="drink">술</Option>
+            <Option value="reels">릴스 중독</Option>
+          </Select>
+        </div> */}
+        <div className="sub-header">증거사진</div>
+        <div className="upload-section">
           <Upload
             name="avatar"
             listType="picture-card"
@@ -110,30 +101,23 @@ const App = () => {
             )}
           </Upload>
         </div>
-      </div>
-      <div style={{ marginTop: "0px" }}>
-        <TextArea
-          showCount
-          maxLength={100}
-          onChange={handleInputChange}
-          placeholder="상황 설명"
-          style={{ marginTop: "0px", height: 120, resize: "none" }}
-        />
-      </div>
-      {/* 오른쪽 정렬된 버튼 */}
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "flex-end",
-          marginTop: "20px",
-        }}
-      >
-        <Button type="primary" size="large" icon={<AntDesignOutlined />}>
-          검거
-        </Button>
+        <div className="description">
+          <TextArea
+            showCount
+            maxLength={100}
+            onChange={handleInputChange}
+            placeholder="상황 설명"
+            style={{ marginTop: "0px", height: 120, resize: "none" }}
+          />
+        </div>
+        <div className="submit-button">
+          <Button type="primary" size="large" icon={<AntDesignOutlined />}>
+            검거
+          </Button>
+        </div>
       </div>
     </div>
   );
 };
 
-export default App;
+export default Arrest;

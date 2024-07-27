@@ -13,6 +13,7 @@ import { Button, message } from "antd";
 import { AntDesignOutlined } from "@ant-design/icons";
 import NavigationBar from "./components/NavigationBar";
 import BottomNavigationBar from "./components/BottomNavigationBar";
+import { AppProvider } from "./AppContext";
 
 function App() {
   const [messageApi, contextHolder] = message.useMessage();
@@ -23,10 +24,11 @@ function App() {
 
   return (
     <>
-      <Router>
-        <NavigationBar></NavigationBar>
-        {contextHolder}
-        {/* <Button
+      <AppProvider>
+        <Router>
+          <NavigationBar></NavigationBar>
+          {contextHolder}
+          {/* <Button
         type="primary"
         size="large"
         icon={<AntDesignOutlined />}
@@ -34,17 +36,18 @@ function App() {
       >
         Gradient Button
       </Button> */}
-        <Routes>
-          <Route path="/" element={<Main />} />
-          <Route path="/mypage" element={<MyPage />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/Arrest" element={<Arrest />} />
-          <Route path="/List" element={<List />} />
-          <Route path="/post/:postId" element={<PostDetail />} />
-          <Route path="Login" element={<LoginPage />} />
-        </Routes>
-        <BottomNavigationBar></BottomNavigationBar>
-      </Router>
+          <Routes>
+            <Route path="/" element={<Main />} />
+            <Route path="/mypage" element={<MyPage />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/Arrest" element={<Arrest />} />
+            <Route path="/List" element={<List />} />
+            <Route path="/post/:postId" element={<PostDetail />} />
+            <Route path="Login" element={<LoginPage />} />
+          </Routes>
+          <BottomNavigationBar></BottomNavigationBar>
+        </Router>
+      </AppProvider>
     </>
   );
 }

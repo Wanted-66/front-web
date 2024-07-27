@@ -9,8 +9,6 @@ import {
   Select,
   DatePicker,
   Upload,
-  Slider,
-  Checkbox,
   message,
   Space,
   ConfigProvider,
@@ -18,12 +16,11 @@ import {
 } from "antd";
 import { PlusOutlined, AntDesignOutlined } from "@ant-design/icons";
 import { css } from "@emotion/css";
+import { AppContext } from "../AppContext";
 
 const { RangePicker } = DatePicker;
 const { TextArea } = Input;
 const { Step } = Steps;
-
-const description = "This is a description.";
 
 // Steps component
 const StepsComponent = ({ current }) => (
@@ -35,7 +32,7 @@ const StepsComponent = ({ current }) => (
 );
 
 // Gradient Button component
-const GradientButton = () => {
+const GradientButton = ({ onClick }) => {
   const { getPrefixCls } = useContext(ConfigProvider.ConfigContext);
   const rootPrefixCls = getPrefixCls();
   const linearGradientButton = css`
@@ -102,12 +99,12 @@ const initiateKakaoPay = async (amount) => {
   }
 };
 // Main App component that renders all parts
-const App = () => {
+const Register = () => {
   const navigate = useNavigate(); // 히스토리 객체 가져오기
+  const { addPost } = useContext(AppContext);
   const [current, setCurrent] = useState(0);
   const [form] = Form.useForm();
   const [category, setCategory] = useState("");
-  // 단계별 데이터 상태
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -207,13 +204,6 @@ const App = () => {
           >
             <Input placeholder="위치를 입력하세요" />
           </Form.Item>
-          <Form.Item
-            name="priority"
-            label="우선순위"
-            rules={[{ required: true, message: "우선순위를 설정해주세요!" }]}
-          >
-            <Slider min={1} max={5} />
-          </Form.Item>
         </Form>
       ),
     },
@@ -270,11 +260,8 @@ const App = () => {
         if (nextStep < steps.length) {
           setCurrent(nextStep);
         } else {
-          // 최종 제출 시, 서버에 데이터 저장 후 페이지 이동
-          // 여기에 서버로의 데이터 전송 로직을 추가하세요
-          // 서버에서 성공적으로 저장되면 받은 postId로 이동
-          const postId = "12345"; // 예시, 서버에서 받은 postId 사용
-          navigate(`/post/${postId}`); // 해당 postId의 상세 페이지로 이동
+          addPost(formData); // formData 전체를 등록
+          navigate("/List"); // 리스트 페이지로 이동
         }
       })
       .catch((info) => {
@@ -311,4 +298,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default Register;
