@@ -1,0 +1,87 @@
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #ffffff; /* 흰색 배경 */
+}
+
+.app-container {
+  max-width: 900px; /* 최대 너비를 900px로 설정 */
+  margin: 0 auto;
+  display: flex;
+  padding: 20px;
+  border-radius: 8px;
+  background: #f8f9fa;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-top: 80px;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  text-align: center;
+  height: calc(100vh - 160px); /* 페이지가 화면 전체를 채우도록 설정 */
+  box-sizing: border-box;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+  width: 100%; /* 전체 너비 사용 */
+}
+
+.image-container {
+  width: 100%; /* 컨테이너 너비를 70%로 설정 */
+  max-width: 600px; /* 최대 너비 설정 */
+  height: 0; /* 높이를 0으로 설정하여 padding-top을 사용하여 비율을 맞춤 */
+  padding-top: 50%; /* 높이 비율을 설정하여 정사각형을 유지 (70% 높이) */
+  position: relative; /* 자식 요소를 절대 위치로 설정하기 위해 relative 위치 설정 */
+  margin-bottom: 20px;
+  overflow: hidden; /* 자식 요소가 컨테이너를 넘지 않도록 설정 */
+}
+
+.arrest-image {
+  position: absolute; /* 자식 요소를 컨테이너의 상단에 절대 위치로 설정 */
+  top: 0;
+  left: 0;
+  width: 100%; /* 이미지 너비를 컨테이너의 너비에 맞춤 */
+  height: 100%; /* 이미지 높이를 컨테이너의 높이에 맞춤 */
+  object-fit: cover; /* 이미지 비율을 유지하면서 컨테이너에 맞춤 */
+}
+
+.description-container {
+  width: 100%; /* 전체 너비 사용 */
+  margin: 40px 0;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center; /* 버튼 사이에 간격 추가 */
+  width: 100%; /* 전체 너비 사용 */
+  margin-top: 20px;
+  gap: 425px;
+}
+
+/* Vote.css */
+
+.vote-button-approve {
+  background-color: #04befe; /* 파란색 */
+  border-color: #04befe;
+  color: #ffffff; /* 흰색 텍스트 */
+}
+
+.vote-button-disapprove {
+  background-color: #ff4d4f; /* 빨간색 */
+  border-color: #ff4d4f;
+  color: #ffffff; /* 흰색 텍스트 */
+}
+
+/* 버튼의 호버 상태에서 색상을 조절할 수 있습니다 */
+.vote-button-approve:hover {
+  background-color: #0398d4; /* 어두운 파란색 */
+  border-color: #0398d4;
+}
+
+.vote-button-disapprove:hover {
+  background-color: #e03a2e; /* 어두운 빨간색 */
+  border-color: #e03a2e;
+}

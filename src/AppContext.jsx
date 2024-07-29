@@ -1,12 +1,10 @@
-// src/AppContext.js
+// AppContext.js
 import React, { createContext, useState } from "react";
 
-const AppContext = createContext();
+export const AppContext = createContext();
 
-const AppProvider = ({ children }) => {
-  const [posts, setPosts] = useState([
-    { title: "금연", content: "금연 캠페인에 참여하세요" },
-  ]);
+export const AppProvider = ({ children }) => {
+  const [posts, setPosts] = useState([]);
 
   const addPost = (post) => {
     setPosts((prevPosts) => [...prevPosts, post]);
@@ -18,5 +16,3 @@ const AppProvider = ({ children }) => {
     </AppContext.Provider>
   );
 };
-
-export { AppContext, AppProvider };

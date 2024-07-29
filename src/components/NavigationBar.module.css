@@ -1,9 +1,9 @@
 .navigationBar {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   background-color: white;
-  padding: 10px 0px 0px 0px;
+  padding: 10px 0;
   border-bottom: 2px solid #e0e0e0;
 }
 
@@ -11,6 +11,9 @@
   font-size: 36px;
   font-weight: bold;
   text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex-grow: 1;
   margin: 0;
   padding: 0;
@@ -20,12 +23,14 @@
   max-width: 64px;
   width: 100%;
   height: auto;
+  display: block;
+  margin: 0 auto;
 }
 
 .notification {
   position: relative;
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
   align-items: center;
   width: 50px; /* 너비를 설정하여 우측 정렬이 잘 되도록 합니다. */
 }

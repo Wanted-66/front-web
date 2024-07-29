@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Layout, Progress, Avatar, Button, Calendar, message } from "antd";
+import { useNavigate } from "react-router-dom";
 import avatar1 from "./assets/image.png";
 import "./main.css";
 import moment from "moment";
@@ -13,6 +14,7 @@ const Main = () => {
   const [daysLeft, setDaysLeft] = useState(null);
   const [progressPercentage, setProgressPercentage] = useState(0);
   const [showBlankScreen, setShowBlankScreen] = useState(false);
+  const navigate = useNavigate(); // useNavigate 훅 사용
 
   const addAvatar = (newAvatarSrc) => {
     setAvatars([...avatars, newAvatarSrc]);
@@ -77,6 +79,10 @@ const Main = () => {
       return () => clearInterval(interval); // 컴포넌트 언마운트 시 interval 정리
     }
   }, [endDate]);
+  // Avatar 클릭 시 Arrest 페이지로 이동
+  const handleAvatarClick = () => {
+    navigate("/postDetail"); //수정해야함, 서버 연결
+  };
 
   return (
     <Layout className="main-container">
@@ -94,6 +100,7 @@ const Main = () => {
                   src={src}
                   size={125}
                   style={{ boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)" }}
+                  onClick={handleAvatarClick} // 클릭 이벤트 핸들러 추가
                 />
               </div>
             ))}
@@ -121,7 +128,10 @@ const Main = () => {
                   </div>
                 </>
               ) : (
-                <div>시작 날짜와 종료 날짜를 선택하세요</div>
+                <div>
+                  도전을 시작해 보세요! <br />
+                  시작 날짜와 종료 날짜를 선택하세요
+                </div>
               )}
             </div>
           </div>

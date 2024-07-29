@@ -23,7 +23,9 @@ const BottomNavigationBar = () => {
         <div className={styles.bottomCounter}>
           <div className={styles.circleContainer}>
             <div className={styles.circle}>
-              <img src={smallIcon} alt="logo" />
+              <Link to="/">
+                <img src={smallIcon} alt="logo" />
+              </Link>
             </div>
           </div>
         </div>

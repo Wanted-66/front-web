@@ -60,3 +60,21 @@
   ):hover::before {
   opacity: 0;
 }
+
+/* 버튼 그룹 스타일 */
+.steps-action {
+  display: flex;
+  justify-content: space-between; /* 버튼들을 좌우로 배치 */
+  margin-top: 20px; /* 버튼 그룹과 폼 사이에 간격 추가 */
+}
+
+/* 이전, 제출 버튼 스타일 */
+.steps-action .ant-btn {
+  margin-right: 10px; /* 버튼들 사이 간격 추가 */
+}
+
+/* 서명하기 버튼 스타일 */
+.gradient-button-container {
+  margin-top: 20px; /* 서명하기 버튼과 폼 사이에 간격 추가 */
+  text-align: center; /* 버튼을 중앙에 배치 */
+}

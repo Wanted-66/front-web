@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "antd";
 import "./PostDetail.css";
@@ -11,19 +11,18 @@ const PostDetail = () => {
   const [comments, setComments] = useState([]);
   const navigate = useNavigate();
 
-  // 임시 데이터 (실제로는 서버에서 받아온 데이터 사용)
   const post = state?.post;
 
   if (!post) {
     return <div>Post not found</div>;
   }
+
   const handleCommentSubmit = (newComment) => {
     setComments([...comments, newComment]);
   };
 
-  // 버튼 클릭 시 호출되는 함수
   const handleArrestClick = () => {
-    navigate("/Arrest"); // /Arrest 페이지로 이동
+    navigate("/Arrest");
   };
 
   return (
@@ -43,13 +42,14 @@ const PostDetail = () => {
           <strong>설명:</strong> {post.description}
         </p>
         <p>
-          <strong>카테고리:</strong> {post.category || post.customCategory}
+          <strong>카테고리:</strong>{" "}
+          {post.category === "기타" ? post.customCategory : post.category}
         </p>
         <p>
-          <strong>날짜 범위:</strong> {post.dateRange.join(" ~ ")}
+          <strong>날짜 범위:</strong> {post.dateRange[0]} ~ {post.dateRange[1]}
         </p>
         <p>
-          <strong>위치:</strong> {post.location}
+          <strong>다짐:</strong> {post.comment}
         </p>
         <p>
           <strong>현상금:</strong> {post.reward.toLocaleString()} 원

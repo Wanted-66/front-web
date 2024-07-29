@@ -48,6 +48,9 @@ body {
 }
 
 .upload-section {
+  width: 300px;
+  height: 300px;
+  margin: 0 auto;
   display: flex;
   justify-content: center; /* 중앙 정렬 */
   margin-bottom: 20px; /* Add margin bottom to create space for description */
@@ -66,4 +69,14 @@ body {
   display: flex;
   justify-content: flex-end;
   margin-top: 20px;
+}
+.avatar-uploader {
+  width: 100%;
+  height: 100%;
+}
+
+.avatar-uploader img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }

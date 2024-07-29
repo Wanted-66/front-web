@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import { useNavigate } from "react-router-dom"; // 추가
+import { useNavigate } from "react-router-dom";
 import "./Register.css";
 import {
   Steps,
@@ -9,14 +9,14 @@ import {
   Select,
   DatePicker,
   Upload,
-  message,
-  Space,
-  ConfigProvider,
   InputNumber,
+  message,
 } from "antd";
-import { PlusOutlined, AntDesignOutlined } from "@ant-design/icons";
-import { css } from "@emotion/css";
+import { PlusOutlined } from "@ant-design/icons";
 import { AppContext } from "../AppContext";
+import SignatureCanvas from "./SignatureCanvas"; // 서명 컴포넌트 임포트
+import { css } from "@emotion/css";
+import { ConfigProvider } from "antd";
 
 const { RangePicker } = DatePicker;
 const { TextArea } = Input;
@@ -26,13 +26,11 @@ const { Step } = Steps;
 const StepsComponent = ({ current }) => (
   <Steps current={current}>
     <Step title="기본 정보를 입력하세요." />
-    <Step title="상세 정보를 입력하세요." />
     <Step title="확인 및 제출." />
   </Steps>
 );
 
-// Gradient Button component
-const GradientButton = ({ onClick }) => {
+const GradientButton = ({ onClick, children }) => {
   const { getPrefixCls } = useContext(ConfigProvider.ConfigContext);
   const rootPrefixCls = getPrefixCls();
   const linearGradientButton = css`
@@ -60,51 +58,25 @@ const GradientButton = ({ onClick }) => {
       }
     }
   `;
-
   return (
-    <ConfigProvider
-      button={{
-        className: linearGradientButton,
-      }}
+    <Button
+      className={linearGradientButton}
+      type="primary"
+      size="large"
+      onClick={onClick}
     >
-      <Space>
-        <Button type="primary" size="large" icon={<AntDesignOutlined />}>
-          서명하기
-        </Button>
-      </Space>
-    </ConfigProvider>
+      {children}
+    </Button>
   );
 };
-// 카카오페이 결제 요청 함수
-const initiateKakaoPay = async (amount) => {
-  try {
-    const response = await fetch("/api/kakao-pay", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ amount }),
-    });
 
-    const data = await response.json();
-
-    if (data.success) {
-      window.location.href = data.redirectUrl; // 카카오페이 결제 페이지로 리다이렉트
-    } else {
-      message.error(data.message || "결제 요청에 실패했습니다.");
-    }
-  } catch (error) {
-    console.error("카카오페이 결제 요청 오류:", error);
-    message.error("결제 요청 중 오류가 발생했습니다.");
-  }
-};
-// Main App component that renders all parts
 const Register = () => {
-  const navigate = useNavigate(); // 히스토리 객체 가져오기
+  const navigate = useNavigate();
   const { addPost } = useContext(AppContext);
   const [current, setCurrent] = useState(0);
   const [form] = Form.useForm();
   const [category, setCategory] = useState("");
+  const [image, setImage] = useState(null);
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -114,7 +86,26 @@ const Register = () => {
     location: "",
     priority: 1,
     reward: 0,
+    comment: "",
   });
+  const [signatureVisible, setSignatureVisible] = useState(false);
+  const [signatureData, setSignatureData] = useState(null);
+  const [isSignatureCompleted, setIsSignatureCompleted] = useState(false);
+
+  const handleImageUpload = (info) => {
+    const file = info.file.originFileObj;
+    const reader = new FileReader();
+
+    reader.onload = (e) => {
+      setImage(e.target.result); // Base64 형식으로 이미지 저장
+      setFormData((prevData) => ({
+        ...prevData,
+        image: e.target.result, // formData에 이미지 데이터 저장
+      }));
+    };
+
+    reader.readAsDataURL(file);
+  };
 
   const steps = [
     {
@@ -144,19 +135,6 @@ const Register = () => {
               placeholder="수배에 대한 상세 설명을 입력하세요"
             />
           </Form.Item>
-        </Form>
-      ),
-    },
-    {
-      title: "상세 정보를 입력하세요.",
-      content: (
-        <Form
-          form={form}
-          layout="vertical"
-          onValuesChange={(changedValues) => {
-            setFormData((prevData) => ({ ...prevData, ...changedValues }));
-          }}
-        >
           <Form.Item
             name="category"
             label="카테고리"
@@ -166,17 +144,17 @@ const Register = () => {
               placeholder="카테고리를 선택하세요"
               onChange={(value) => {
                 setCategory(value);
-                setFormData({ ...formData, category: value });
+                setFormData((prevData) => ({ ...prevData, category: value }));
               }}
             >
-              <Select.Option value="game">게임 중독</Select.Option>
-              <Select.Option value="smoke">흡연</Select.Option>
-              <Select.Option value="drink">음주</Select.Option>
-              <Select.Option value="reels">릴스 중독</Select.Option>
-              <Select.Option value="other">기타</Select.Option>
+              <Select.Option value="게임 중독">게임 중독</Select.Option>
+              <Select.Option value="흡연">흡연</Select.Option>
+              <Select.Option value="음주">음주</Select.Option>
+              <Select.Option value="릴스 중독">릴스 중독</Select.Option>
+              <Select.Option value="기타">기타</Select.Option>
             </Select>
           </Form.Item>
-          {category === "other" && (
+          {category === "기타" && (
             <Form.Item
               name="customCategory"
               label="기타 카테고리"
@@ -185,7 +163,10 @@ const Register = () => {
               <Input
                 placeholder="직접 카테고리를 입력하세요"
                 onChange={(e) => {
-                  setFormData({ ...formData, customCategory: e.target.value });
+                  setFormData((prevData) => ({
+                    ...prevData,
+                    customCategory: e.target.value,
+                  }));
                 }}
               />
             </Form.Item>
@@ -195,14 +176,21 @@ const Register = () => {
             label="날짜"
             rules={[{ required: true, message: "날짜를 선택해주세요!" }]}
           >
-            <RangePicker />
+            <RangePicker
+              onChange={(dates, dateStrings) => {
+                setFormData((prevData) => ({
+                  ...prevData,
+                  dateRange: dateStrings,
+                }));
+              }}
+            />
           </Form.Item>
           <Form.Item
-            name="location"
-            label="위치"
-            rules={[{ required: true, message: "위치를 입력해주세요!" }]}
+            name="comment"
+            label="다짐 한마디"
+            rules={[{ required: true, message: "다짐을 입력해주세요!" }]}
           >
-            <Input placeholder="위치를 입력하세요" />
+            <Input placeholder="다짐을 입력하세요" />
           </Form.Item>
         </Form>
       ),
@@ -223,12 +211,16 @@ const Register = () => {
               listType="picture-card"
               className="avatar-uploader"
               showUploadList={false}
-              action="/upload.do"
+              onChange={handleImageUpload}
             >
-              <div className="upload-button">
-                <PlusOutlined />
-                <div style={{ marginTop: 8 }}>Upload</div>
-              </div>
+              {image ? (
+                <img src={image} alt="avatar" style={{ width: "100%" }} />
+              ) : (
+                <div className="upload-button">
+                  <PlusOutlined />
+                  <div style={{ marginTop: 8 }}>Upload</div>
+                </div>
+              )}
             </Upload>
           </Form.Item>
           <Form.Item
@@ -239,12 +231,13 @@ const Register = () => {
             <InputNumber
               style={{ width: "100%" }}
               min={0}
-              formatter={(value) =>
-                `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-              }
-              parser={(value) => value.replace(/\$\s?|(,*)/g, "")}
-              placeholder="현상금 금액을 입력하세요"
-              onChange={(value) => setFormData({ ...formData, reward: value })}
+              placeholder="현상금을 입력하세요"
+              onChange={(value) => {
+                setFormData((prevData) => ({
+                  ...prevData,
+                  reward: value,
+                }));
+              }}
             />
           </Form.Item>
         </Form>
@@ -252,7 +245,18 @@ const Register = () => {
     },
   ];
 
+  const prev = () => {
+    setCurrent(current - 1);
+  };
+
   const next = () => {
+    if (current === steps.length - 1) {
+      if (!isSignatureCompleted) {
+        message.error("서명을 완료해야 제출할 수 있습니다.");
+        return;
+      }
+    }
+
     form
       .validateFields()
       .then(() => {
@@ -269,8 +273,14 @@ const Register = () => {
       });
   };
 
-  const prev = () => {
-    setCurrent(current - 1);
+  const handleSignature = () => {
+    setSignatureVisible(true);
+  };
+
+  const handleSignatureSave = (dataURL) => {
+    setSignatureData(dataURL);
+    setIsSignatureCompleted(true); // 서명 완료 상태 업데이트
+    message.success("서명이 저장되었습니다!");
   };
 
   return (
@@ -279,21 +289,37 @@ const Register = () => {
       <div className="steps-content">{steps[current].content}</div>
       <div className="steps-action">
         {current > 0 && (
-          <Button type="default" onClick={() => prev()}>
+          <Button type="default" onClick={prev}>
             이전
           </Button>
         )}
         {current < steps.length - 1 && (
-          <Button type="primary" onClick={() => next()}>
+          <Button type="primary" onClick={next}>
             다음
           </Button>
         )}
         {current === steps.length - 1 && (
-          <Button type="primary" onClick={() => next()}>
-            선결제
-          </Button>
+          <>
+            <GradientButton onClick={handleSignature}>서명하기</GradientButton>
+            <Button
+              type="primary"
+              onClick={next}
+              disabled={!isSignatureCompleted && current === steps.length - 1}
+            >
+              제출
+            </Button>
+          </>
         )}
       </div>
+
+      {/* 서명 모달 */}
+      {signatureVisible && (
+        <SignatureCanvas
+          visible={signatureVisible}
+          onClose={() => setSignatureVisible(false)}
+          onSave={handleSignatureSave}
+        />
+      )}
     </div>
   );
 };

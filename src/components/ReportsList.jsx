@@ -1,21 +1,19 @@
+//제보 이력 페이지
 import React, { useContext } from "react";
-import "./List.css";
-import { Button, ConfigProvider, Card } from "antd";
+import { Button, Card } from "antd";
 import { AntDesignOutlined } from "@ant-design/icons";
 import { AppContext } from "../AppContext";
-import { css } from "@emotion/css";
+import { css } from "@emotion/react";
 import { useNavigate } from "react-router-dom";
 
 const GradientButton = ({ post }) => {
-  const { getPrefixCls } = useContext(ConfigProvider.ConfigContext);
-  const rootPrefixCls = getPrefixCls();
   const navigate = useNavigate();
 
   const linearGradientButton = css`
-    &.${rootPrefixCls}-btn-primary:not([disabled]):not(
-        .${rootPrefixCls}-btn-dangerous
-      ) {
+    &.ant-btn-primary:not([disabled]):not(.ant-btn-dangerous) {
       border-width: 0;
+      position: relative;
+      overflow: hidden;
 
       > span {
         position: relative;
@@ -38,7 +36,7 @@ const GradientButton = ({ post }) => {
   `;
 
   const handleButtonClick = () => {
-    navigate(`/post/${post.id}`, { state: { post } });
+    navigate(`/reports/${post.id}`, { state: { post } });
   };
 
   return (
@@ -49,20 +47,24 @@ const GradientButton = ({ post }) => {
       icon={<AntDesignOutlined />}
       onClick={handleButtonClick}
     >
-      현상수배 보기
+      제보 상세 보기
     </Button>
   );
 };
 
-const ListComponent = () => {
-  const { posts } = useContext(AppContext);
+const ReportsList = () => {
+  const { reports } = useContext(AppContext);
+
+  if (!reports || reports.length === 0) {
+    return <p>제보 이력이 없습니다.</p>;
+  }
 
   return (
     <div className="card-container">
-      {posts.map((post, index) => (
+      {reports.map((report) => (
         <Card
-          key={index}
-          title={<div className="card-title">{post.title}</div>}
+          key={report.id}
+          title={<div className="card-title">{report.title}</div>}
           style={{ width: "100%", textAlign: "left", marginBottom: "16px" }}
         >
           <div
@@ -72,8 +74,8 @@ const ListComponent = () => {
               alignItems: "center",
             }}
           >
-            <div className="card-content">{post.description}</div>
-            <GradientButton post={post} />
+            <div className="card-content">{report.description}</div>
+            <GradientButton post={report} />
           </div>
         </Card>
       ))}
@@ -81,4 +83,4 @@ const ListComponent = () => {
   );
 };
 
-export default ListComponent;
+export default ReportsList;
