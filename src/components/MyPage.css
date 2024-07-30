@@ -70,6 +70,7 @@ body {
   text-align: center;
   font-family: "SeoulHangangC", sans-serif;
   padding-bottom: 80px; /* 하단 여백 추가 */
+  margin-top: 100px;
 }
 
 .profile {

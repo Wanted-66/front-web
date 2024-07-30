@@ -22,11 +22,11 @@ const { RangePicker } = DatePicker;
 const { TextArea } = Input;
 const { Step } = Steps;
 
-// Steps component
 const StepsComponent = ({ current }) => (
   <Steps current={current}>
     <Step title="기본 정보를 입력하세요." />
-    <Step title="확인 및 제출." />
+    <Step title="확인 및 서명." />
+    <Step title="미리보기" />
   </Steps>
 );
 
@@ -87,9 +87,10 @@ const Register = () => {
     priority: 1,
     reward: 0,
     comment: "",
+    signature: null,
+    name: "홍길동", // 예시로 입력된 사용자 이름
   });
   const [signatureVisible, setSignatureVisible] = useState(false);
-  const [signatureData, setSignatureData] = useState(null);
   const [isSignatureCompleted, setIsSignatureCompleted] = useState(false);
 
   const handleImageUpload = (info) => {
@@ -105,6 +106,15 @@ const Register = () => {
     };
 
     reader.readAsDataURL(file);
+  };
+
+  const handleSignatureSave = (dataURL) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      signature: dataURL, // 서명 데이터를 formData에 저장
+    }));
+    setIsSignatureCompleted(true);
+    message.success("서명이 저장되었습니다!");
   };
 
   const steps = [
@@ -196,7 +206,7 @@ const Register = () => {
       ),
     },
     {
-      title: "확인 및 제출.",
+      title: "확인 및 서명.",
       content: (
         <Form
           form={form}
@@ -232,6 +242,11 @@ const Register = () => {
               style={{ width: "100%" }}
               min={0}
               placeholder="현상금을 입력하세요"
+              formatter={(value) => {
+                if (!value) return "";
+                return `₩ ${value.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`;
+              }}
+              parser={(value) => value.replace(/₩\s?|(,*)/g, "")}
               onChange={(value) => {
                 setFormData((prevData) => ({
                   ...prevData,
@@ -240,7 +255,54 @@ const Register = () => {
               }}
             />
           </Form.Item>
+          <GradientButton onClick={() => setSignatureVisible(true)}>
+            서명하기
+          </GradientButton>
         </Form>
+      ),
+    },
+    {
+      title: "미리보기",
+      content: (
+        <div className="post-detail-container">
+          <div className="post-header">
+            <h1 className="post-title">{formData.title}</h1>
+          </div>
+          {image && <img src={image} alt="표지 사진" className="post-image" />}
+          <div className="post-info">
+            <p>
+              <strong>작성자:</strong> {formData.name}
+            </p>
+            <p>
+              <strong>설명:</strong> {formData.description}
+            </p>
+            <p>
+              <strong>카테고리:</strong>{" "}
+              {formData.category === "기타"
+                ? formData.customCategory
+                : formData.category}
+            </p>
+            <p>
+              <strong>날짜:</strong> {formData.dateRange.join(" ~ ")}
+            </p>
+            <p>
+              <strong>다짐 한마디:</strong> {formData.comment}
+            </p>
+            <p>
+              <strong>현상금:</strong> {formData.reward.toLocaleString()} 원
+            </p>
+          </div>
+          {formData.signature && (
+            <div className="signature-preview">
+              <h2>서명</h2>
+              <img
+                src={formData.signature}
+                alt="서명"
+                className="post-signature"
+              />
+            </div>
+          )}
+        </div>
       ),
     },
   ];
@@ -277,12 +339,6 @@ const Register = () => {
     setSignatureVisible(true);
   };
 
-  const handleSignatureSave = (dataURL) => {
-    setSignatureData(dataURL);
-    setIsSignatureCompleted(true); // 서명 완료 상태 업데이트
-    message.success("서명이 저장되었습니다!");
-  };
-
   return (
     <div className="register-container">
       <StepsComponent current={current} />
@@ -299,16 +355,13 @@ const Register = () => {
           </Button>
         )}
         {current === steps.length - 1 && (
-          <>
-            <GradientButton onClick={handleSignature}>서명하기</GradientButton>
-            <Button
-              type="primary"
-              onClick={next}
-              disabled={!isSignatureCompleted && current === steps.length - 1}
-            >
-              제출
-            </Button>
-          </>
+          <Button
+            type="primary"
+            onClick={next}
+            disabled={!isSignatureCompleted && current === steps.length - 1}
+          >
+            제출
+          </Button>
         )}
       </div>
 

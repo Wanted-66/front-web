@@ -3,6 +3,7 @@ import { Button, Card } from "antd";
 import { AntDesignOutlined } from "@ant-design/icons";
 import { css } from "@emotion/react";
 import { useNavigate } from "react-router-dom";
+import "./BountiesList.css";
 
 // GradientButton 컴포넌트 정의
 const GradientButton = ({ post }) => {
@@ -83,6 +84,7 @@ const BountiesList = () => {
 
   return (
     <div className="card-container">
+      <h2>현상금 이력</h2>
       {bounties.map((bounty) => (
         <Card
           key={bounty.id}

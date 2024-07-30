@@ -4,6 +4,7 @@ import { AntDesignOutlined } from "@ant-design/icons";
 import { AppContext } from "../AppContext";
 import { css } from "@emotion/react";
 import { useNavigate } from "react-router-dom";
+import "./WantedList.css";
 
 const GradientButton = ({ post }) => {
   const { getPrefixCls } = useContext(ConfigProvider.ConfigContext);
@@ -78,6 +79,7 @@ const WantedList = () => {
 
   return (
     <div className="card-container">
+      <h2>수배 이력</h2>
       {wanted.map((item) => (
         <Card
           key={item.id}

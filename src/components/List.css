@@ -12,10 +12,9 @@ body {
   border-radius: 8px;
   background: #f8f9fa;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  margin-top: 80px;
+  margin-top: 100px;
   flex-direction: column;
   align-items: center;
-  padding: 20px;
   text-align: center;
   height: calc(100vh - 160px); /* 페이지가 화면 전체를 채우도록 설정 */
   box-sizing: border-box;

@@ -1,22 +1,16 @@
-body {
-  margin: 0;
-  padding: 0;
-  background-color: #ffffff; /* 흰색 배경 */
-}
+/* 기존 CSS 코드 */
 
 .app-container {
   max-width: 900px; /* 최대 너비를 900px로 설정 */
   margin: 0 auto;
   display: flex;
+  flex-direction: column; /* 세로 방향으로 레이아웃 설정 */
   padding: 20px;
   border-radius: 8px;
   background: #f8f9fa;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  margin-top: 80px;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px;
-  text-align: center;
+  margin-top: 60px;
+  align-items: center; /* 중앙 정렬 */
   height: calc(100vh - 160px); /* 페이지가 화면 전체를 채우도록 설정 */
   box-sizing: border-box;
 }
@@ -25,7 +19,6 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 20px;
   width: 100%; /* 전체 너비 사용 */
 }
 
@@ -33,7 +26,7 @@ body {
   width: 100%; /* 컨테이너 너비를 70%로 설정 */
   max-width: 600px; /* 최대 너비 설정 */
   height: 0; /* 높이를 0으로 설정하여 padding-top을 사용하여 비율을 맞춤 */
-  padding-top: 50%; /* 높이 비율을 설정하여 정사각형을 유지 (70% 높이) */
+  padding-top: 50%; /* 높이 비율을 설정하여 정사각형을 유지 (50% 높이) */
   position: relative; /* 자식 요소를 절대 위치로 설정하기 위해 relative 위치 설정 */
   margin-bottom: 20px;
   overflow: hidden; /* 자식 요소가 컨테이너를 넘지 않도록 설정 */
@@ -50,38 +43,48 @@ body {
 
 .description-container {
   width: 100%; /* 전체 너비 사용 */
-  margin: 40px 0;
+  margin: 20px 0; /* 상하 마진을 조정하여 내용과 버튼 사이에 간격 추가 */
+  display: flex;
+  justify-content: center; /* 중앙 정렬 */
 }
 
 .button-container {
   display: flex;
   justify-content: center; /* 버튼 사이에 간격 추가 */
   width: 100%; /* 전체 너비 사용 */
-  margin-top: 20px;
-  gap: 425px;
+  margin-top: 20px; /* 버튼들 위쪽에 여백 추가 */
+  gap: 20px; /* 버튼 간 간격 설정 */
 }
 
 /* Vote.css */
 
 .vote-button-approve {
-  background-color: #04befe; /* 파란색 */
-  border-color: #04befe;
-  color: #ffffff; /* 흰색 텍스트 */
+  background-color: #04befe !important; /* 파란색 */
+  border-color: #04befe !important;
+  color: #ffffff !important; /* 흰색 텍스트 */
 }
 
 .vote-button-disapprove {
-  background-color: #ff4d4f; /* 빨간색 */
-  border-color: #ff4d4f;
-  color: #ffffff; /* 흰색 텍스트 */
+  background-color: #ff4d4f !important; /* 빨간색 */
+  border-color: #ff4d4f !important;
+  color: #ffffff !important; /* 흰색 텍스트 */
 }
 
 /* 버튼의 호버 상태에서 색상을 조절할 수 있습니다 */
 .vote-button-approve:hover {
-  background-color: #0398d4; /* 어두운 파란색 */
-  border-color: #0398d4;
+  background-color: #0398d4 !important; /* 어두운 파란색 */
+  border-color: #0398d4 !important;
 }
 
 .vote-button-disapprove:hover {
-  background-color: #e03a2e; /* 어두운 빨간색 */
-  border-color: #e03a2e;
+  background-color: #e03a2e !important; /* 어두운 빨간색 */
+  border-color: #e03a2e !important;
+}
+
+.card-title {
+  width: 200px; /* 제목의 최대 너비 설정 */
+  margin: 0 auto; /* 중앙 정렬 */
+  text-align: center; /* 텍스트 중앙 정렬 */
+  font-size: 18px; /* 제목 글씨 크기 조절 */
+  font-weight: 600; /* 제목 글씨 두께 조절 */
 }

@@ -1,20 +1,23 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Button, ConfigProvider, Space, Input } from "antd";
+import { Button, ConfigProvider, Space, Typography, Card } from "antd";
 import { AntDesignOutlined } from "@ant-design/icons";
 import { css } from "@emotion/css";
 import "./Vote.css";
 
-const { TextArea } = Input;
+const { Text } = Typography;
 
 const Vote = () => {
   const { getPrefixCls } = useContext(ConfigProvider.ConfigContext);
   const rootPrefixCls = getPrefixCls();
   const [imageUrl, setImageUrl] = useState(null);
+  const [description, setDescription] = useState("");
 
   useEffect(() => {
     // 로컬 스토리지에서 이미지 URL을 가져옴
     const savedImageUrl = localStorage.getItem("uploadedImageUrl");
+    const savedDescription = localStorage.getItem("description");
     setImageUrl(savedImageUrl);
+    setDescription(savedDescription);
   }, []);
 
   const linearGradientButton = css`
@@ -64,13 +67,22 @@ const Vote = () => {
             )}
           </div>
           <div className="description-container">
-            <TextArea
-              showCount
-              maxLength={100}
-              onChange={onChange}
-              placeholder="상황설명"
-              style={{ width: "70%", height: 120, resize: "none" }}
-            />
+            <Card
+              //title="상황 설명"
+              bordered={false}
+              style={{
+                width: "100%",
+                maxWidth: 600,
+                margin: "20px auto",
+                padding: "20px",
+                textAlign: "center",
+                boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+              }}
+              headStyle={{ padding: 0, borderBottom: "none" }} // 제목 스타일
+              title={<div className="card-title">상황 설명</div>} // 제목 부분
+            >
+              <Text>{description || "상황 설명이 없습니다."}</Text>
+            </Card>
           </div>
           <Space className="button-container">
             <Button

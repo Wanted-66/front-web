@@ -33,6 +33,7 @@ const beforeUpload = (file) => {
 const Arrest = ({ userName }) => {
   const [loading, setLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState(null);
+  const [description, setDescription] = useState(""); // 상황 설명
   const navigate = useNavigate();
 
   const handleChange = (info) => {
@@ -54,9 +55,10 @@ const Arrest = ({ userName }) => {
   const handleSubmit = () => {
     if (imageUrl) {
       localStorage.setItem("uploadedImageUrl", imageUrl);
+      localStorage.setItem("description", description);
       navigate("/vote");
     } else {
-      message.error("이미지를 업로드해 주세요.");
+      message.error("이미지와 상황설명을 모두 입력해 주세요.");
     }
   };
 
@@ -111,6 +113,8 @@ const Arrest = ({ userName }) => {
             maxLength={100}
             placeholder="상황 설명"
             style={{ height: 120, resize: "none" }}
+            value={description}
+            onChange={(e) => setDescription(e.target.value)} // 상태 업데이트
           />
         </div>
         <div className="submit-button">

@@ -39,6 +39,9 @@ const PostDetail = () => {
       )}
       <div className="post-info">
         <p>
+          <strong>작성자:</strong> {post.name}
+        </p>
+        <p>
           <strong>설명:</strong> {post.description}
         </p>
         <p>

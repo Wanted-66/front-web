@@ -18,7 +18,7 @@ body {
   border-radius: 8px;
   background: #f8f9fa;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  margin-top: 20px; /* 상단 여백 조정 */
+  margin-top: 45px; /* 상단 여백 조정 */
   box-sizing: border-box;
   padding-top: 20px; /* 네비게이션 바와의 간격 */
   padding-bottom: 80px;

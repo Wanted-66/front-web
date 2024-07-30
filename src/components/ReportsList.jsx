@@ -3,6 +3,7 @@ import { Button, Card } from "antd";
 import { AntDesignOutlined } from "@ant-design/icons";
 import { css } from "@emotion/react";
 import { useNavigate } from "react-router-dom";
+import "./ReportList.css";
 
 // GradientButton 컴포넌트 정의
 const GradientButton = ({ post }) => {
@@ -84,6 +85,7 @@ const ReportsList = () => {
 
   return (
     <div className="card-container">
+      <h2>제보 이력</h2>
       {reports.map((report) => (
         <Card
           key={report.id}

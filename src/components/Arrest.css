@@ -12,7 +12,6 @@ body {
   border-radius: 8px;
   background: #f8f9fa;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  margin-top: 0;
   flex-direction: column;
   display: flex;
   text-align: center;
@@ -21,6 +20,7 @@ body {
   height: 100vh;
   box-sizing: border-box;
   padding-top: 20px; /* 네비게이션 바와의 간격 */
+  margin-top: 45px;
 }
 
 .arrest-content {

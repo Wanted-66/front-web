@@ -80,6 +80,7 @@ body {
   overflow: hidden;
   width: 500px;
   height: 800px;
+  border-radius: 50%;
 }
 
 .calendar-container {
@@ -97,16 +98,16 @@ body {
   display: flex;
   flex-wrap: nowrap;
   gap: 16px;
-  max-width: 100%;
   align-items: center;
   justify-content: flex-start;
   overflow-x: auto; /* 수평 스크롤 가능 */
   overflow-y: hidden; /* 수직 스크롤 숨기기 */
-  margin-bottom: -5px;
   padding: 0;
   white-space: nowrap;
   -webkit-overflow-scrolling: touch; /* 모바일에서 스크롤을 부드럽게 */
   cursor: grab; /* 드래그 가능임을 나타내는 커서 */
+  margin-top: 130px;
+  width: 100%;
 }
 
 .avatar-group-container::-webkit-scrollbar {
@@ -118,14 +119,19 @@ body {
 }
 
 .ant-avatar {
+  border-radius: 50%; /* 원 형태로 만들기 */
+  width: 60px; /* 원하는 크기로 조절 */
+  height: 60px; /* width와 height을 동일하게 설정 */
+  object-fit: cover; /* 이미지 비율 유지 */
   margin: 0 4px;
+  flex-shrink: 0; /* 아바타가 줄어들지 않도록 설정 */
 }
 
 .avatar-wrapper {
   flex: 0 0 auto; /* 아바타가 줄 바꿈되지 않도록 설정 */
   margin-right: 5px; /* 아바타 간 간격 설정 */
-  margin-bottom: -5px;
-  margin-top: -20px;
+  /* margin-bottom: -5px;
+  margin-top: -20px; */
 }
 
 .text-d-day-wrapper {
