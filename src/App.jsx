@@ -19,6 +19,9 @@ import WantedList from "./components/WantedList";
 import ReportsList from "./components/ReportsList";
 import BountiesList from "./components/BountiesList";
 import SendFriendRequest from "./components/SendFriendRequest";
+import FriendList from "./components/FriendList";
+import MyReportList from "./components/MyReportList";
+import Result from "./components/Result";
 
 function App() {
   const [messageApi, contextHolder] = message.useMessage();
@@ -54,6 +57,9 @@ function App() {
             <Route path="/bounties" element={<BountiesList />} />
             <Route path="/reports" element={<ReportsList />} />
             <Route path="/SendFriendRequest" element={<SendFriendRequest />} />
+            <Route path="/friend" element={<FriendList />} />
+            <Route path="/myList" element={<MyReportList />} />
+            <Route path="/result" element={<Result />} />
           </Routes>
           <BottomNavigationBar></BottomNavigationBar>
         </Router>

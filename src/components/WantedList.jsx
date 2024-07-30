@@ -1,4 +1,3 @@
-//수배 이력 페이지
 import React, { useContext } from "react";
 import { Button, Card, ConfigProvider } from "antd";
 import { AntDesignOutlined } from "@ant-design/icons";
@@ -35,7 +34,7 @@ const GradientButton = ({ post }) => {
   `;
 
   const handleButtonClick = () => {
-    navigate(`/wanted/${post.id}`, { state: { post } });
+    navigate(`/postDetail/${post.id}`, { state: { post } });
   };
 
   return (
@@ -52,11 +51,30 @@ const GradientButton = ({ post }) => {
 };
 
 const WantedList = () => {
-  const { wanted } = useContext(AppContext);
+  // 임시 데이터
+  const wanted = [
+    {
+      id: 1,
+      title: "사례: 김철수",
+      description: "도난 사건의 주요 용의자입니다. 경고: 위험할 수 있음.",
+    },
+    {
+      id: 2,
+      title: "사례: 박영희",
+      description: "부유층을 대상으로 한 사기 사건의 피의자입니다.",
+    },
+    {
+      id: 3,
+      title: "사례: 이민호",
+      description: "강도 사건에 관련된 용의자입니다. 정보 제공 시 보상 있음.",
+    },
+  ];
 
-  if (!wanted || wanted.length === 0) {
-    return <p>수배 이력이 없습니다.</p>;
-  }
+  // 실제 AppContext 사용 시 주석 처리
+  // const { wanted } = useContext(AppContext);
+  // if (!wanted || wanted.length === 0) {
+  //   return <p>수배 이력이 없습니다.</p>;
+  // }
 
   return (
     <div className="card-container">

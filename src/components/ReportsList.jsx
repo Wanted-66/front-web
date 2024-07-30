@@ -1,11 +1,10 @@
-//제보 이력 페이지
-import React, { useContext } from "react";
+import React from "react";
 import { Button, Card } from "antd";
 import { AntDesignOutlined } from "@ant-design/icons";
-import { AppContext } from "../AppContext";
 import { css } from "@emotion/react";
 import { useNavigate } from "react-router-dom";
 
+// GradientButton 컴포넌트 정의
 const GradientButton = ({ post }) => {
   const navigate = useNavigate();
 
@@ -36,7 +35,7 @@ const GradientButton = ({ post }) => {
   `;
 
   const handleButtonClick = () => {
-    navigate(`/reports/${post.id}`, { state: { post } });
+    navigate(`/PostDetail/${post.id}`, { state: { post } });
   };
 
   return (
@@ -52,8 +51,32 @@ const GradientButton = ({ post }) => {
   );
 };
 
+// ReportsList 컴포넌트 정의
 const ReportsList = () => {
-  const { reports } = useContext(AppContext);
+  // 샘플 데이터 정의
+  const reports = [
+    {
+      id: 1,
+      title: "제보자: 홍길동",
+      description:
+        "최근에 목격된 사건에 대한 제보입니다. 사건에 대한 자세한 정보가 필요합니다.",
+    },
+    {
+      id: 2,
+      title: "제보자: 이순신",
+      description:
+        "범죄 발생 현장에 대한 제보입니다. 자세한 목격 정보가 포함되어 있습니다.",
+    },
+    {
+      id: 3,
+      title: "제보자: 강감찬",
+      description:
+        "사건과 관련된 중요한 정보를 제공한 제보입니다. 추가 정보가 필요합니다.",
+    },
+  ];
+
+  // 실제 AppContext 사용 시 주석 처리
+  // const { reports } = useContext(AppContext);
 
   if (!reports || reports.length === 0) {
     return <p>제보 이력이 없습니다.</p>;

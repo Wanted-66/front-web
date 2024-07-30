@@ -1,20 +1,23 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Layout, Progress, Avatar, Button, Calendar, message } from "antd";
 import { useNavigate } from "react-router-dom";
+import { FloatButton } from "antd";
 import avatar1 from "./assets/image.png";
 import "./main.css";
 import moment from "moment";
+import { EditOutlined } from "@ant-design/icons";
 
 const { Content, Footer } = Layout;
 
 const Main = () => {
-  const [avatars, setAvatars] = useState([]); // 초기 빈 배열
-  const [startDate, setStartDate] = useState(null); // 시작 날짜 상태 추가
-  const [endDate, setEndDate] = useState(null); // 종료 날짜 상태 추가
+  const [avatars, setAvatars] = useState([]);
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
   const [daysLeft, setDaysLeft] = useState(null);
   const [progressPercentage, setProgressPercentage] = useState(0);
   const [showBlankScreen, setShowBlankScreen] = useState(false);
-  const navigate = useNavigate(); // useNavigate 훅 사용
+  const containerRef = useRef(null); // 컨테이너의 참조를 위한 Ref
+  const navigate = useNavigate();
 
   const addAvatar = (newAvatarSrc) => {
     setAvatars([...avatars, newAvatarSrc]);
@@ -44,14 +47,14 @@ const Main = () => {
 
   const onSelectDate = (date) => {
     if (!startDate) {
-      setStartDate(date.toDate()); // 시작 날짜 설정
+      setStartDate(date.toDate());
     } else {
       const selectedEndDate = date.toDate();
       if (moment(selectedEndDate).isBefore(moment(startDate))) {
         message.error("종료 날짜는 시작 날짜 이후여야 합니다.");
-        return; // 종료 날짜가 시작 날짜보다 이전일 경우 처리하지 않음
+        return;
       }
-      setEndDate(selectedEndDate); // 종료 날짜 설정
+      setEndDate(selectedEndDate);
       const leftDays = calculateDaysLeft(selectedEndDate);
       setDaysLeft(leftDays);
       setProgressPercentage(calculateProgress(selectedEndDate));
@@ -59,7 +62,6 @@ const Main = () => {
     }
   };
 
-  // 현재 날짜 이전의 날짜를 비활성화
   const disabledDate = (current) => {
     return current && current < moment().startOf("day");
   };
@@ -70,18 +72,61 @@ const Main = () => {
         setProgressPercentage(calculateProgress(endDate));
       };
 
-      // 초기 progress 업데이트
       updateProgress();
 
-      // 매일 progress 업데이트
       const interval = setInterval(updateProgress, 86400000); // 24시간
 
-      return () => clearInterval(interval); // 컴포넌트 언마운트 시 interval 정리
+      return () => clearInterval(interval);
     }
   }, [endDate]);
-  // Avatar 클릭 시 Arrest 페이지로 이동
+
+  // 드래그 기능 추가
+  useEffect(() => {
+    const container = containerRef.current;
+    let isDragging = false;
+    let startX;
+    let scrollLeft;
+
+    const handleMouseDown = (e) => {
+      isDragging = true;
+      startX = e.pageX - container.offsetLeft;
+      scrollLeft = container.scrollLeft;
+      container.classList.add("dragging"); // 드래그 중 클래스 추가
+    };
+
+    const handleMouseLeave = () => {
+      isDragging = false;
+      container.classList.remove("dragging"); // 드래그 중 클래스 제거
+    };
+
+    const handleMouseUp = () => {
+      isDragging = false;
+      container.classList.remove("dragging"); // 드래그 중 클래스 제거
+    };
+
+    const handleMouseMove = (e) => {
+      if (!isDragging) return;
+      e.preventDefault();
+      const x = e.pageX - container.offsetLeft;
+      const walk = (x - startX) * 2; // 이동 속도 조절
+      container.scrollLeft = scrollLeft - walk;
+    };
+
+    container.addEventListener("mousedown", handleMouseDown);
+    container.addEventListener("mouseleave", handleMouseLeave);
+    container.addEventListener("mouseup", handleMouseUp);
+    container.addEventListener("mousemove", handleMouseMove);
+
+    return () => {
+      container.removeEventListener("mousedown", handleMouseDown);
+      container.removeEventListener("mouseleave", handleMouseLeave);
+      container.removeEventListener("mouseup", handleMouseUp);
+      container.removeEventListener("mousemove", handleMouseMove);
+    };
+  }, []);
+
   const handleAvatarClick = () => {
-    navigate("/postDetail"); //수정해야함, 서버 연결
+    navigate("/postDetail");
   };
 
   return (
@@ -89,6 +134,7 @@ const Main = () => {
       <div className="main-content-wrapper">
         <Content className="main-content">
           <div
+            ref={containerRef} // 참조 추가
             className={`avatar-group-container ${
               avatars.length > 0 ? "has-avatars" : ""
             }`}
@@ -100,7 +146,7 @@ const Main = () => {
                   src={src}
                   size={125}
                   style={{ boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)" }}
-                  onClick={handleAvatarClick} // 클릭 이벤트 핸들러 추가
+                  onClick={handleAvatarClick}
                 />
               </div>
             ))}
@@ -111,7 +157,6 @@ const Main = () => {
             }`}
           >
             <div className="text-d-day">
-              {/* 조건부 렌더링 */}
               {startDate && endDate ? (
                 <>
                   <div className="date-info">
@@ -171,7 +216,12 @@ const Main = () => {
           </div>
         </Content>
       </div>
-      <Footer style={{ textAlign: "center" }}></Footer>
+      <Footer style={{ textAlign: "center" }}>{/* Footer content */}</Footer>
+      <FloatButton
+        className="custom-float-button"
+        icon={<EditOutlined />}
+        onClick={() => navigate("/register")}
+      />
     </Layout>
   );
 };

@@ -1,0 +1,64 @@
+.result-container {
+  max-width: 800px; /* 최대 너비를 800px로 설정 */
+  margin: 0 auto;
+  padding: 40px;
+  border-radius: 12px;
+  background: #ffffff; /* 흰색 배경 */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  margin-top: 20px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: calc(100vh - 200px); /* 화면 높이에서 여백을 제외한 전체 높이 */
+}
+
+.result-header {
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: #333333; /* 어두운 텍스트 색상 */
+}
+
+.chart-container {
+  display: flex;
+  justify-content: center; /* 중앙 정렬 */
+  margin: 10px 0;
+  height: 400px; /* 차트 높이 설정 */
+  width: 100%; /* 차트 너비 설정 */
+  max-width: 600px; /* 차트 최대 너비 설정 */
+}
+
+.button-container {
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+}
+
+button.primary {
+  background-color: #1890ff; /* 파란색 */
+  color: #ffffff; /* 흰색 텍스트 */
+}
+
+button.danger {
+  background-color: #ff4d4f; /* 빨간색 */
+  color: #ffffff; /* 흰색 텍스트 */
+}
+
+button.primary:hover {
+  background-color: #40a9ff; /* 더 밝은 파란색 */
+}
+
+button.danger:hover {
+  background-color: #e03a2e; /* 어두운 빨간색 */
+}

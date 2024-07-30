@@ -100,10 +100,21 @@ body {
   max-width: 100%;
   align-items: center;
   justify-content: flex-start;
-  overflow-x: hidden; /* 스크롤바 제거 */
+  overflow-x: auto; /* 수평 스크롤 가능 */
+  overflow-y: hidden; /* 수직 스크롤 숨기기 */
   margin-bottom: -5px;
-  padding: 10px 0;
+  padding: 0;
   white-space: nowrap;
+  -webkit-overflow-scrolling: touch; /* 모바일에서 스크롤을 부드럽게 */
+  cursor: grab; /* 드래그 가능임을 나타내는 커서 */
+}
+
+.avatar-group-container::-webkit-scrollbar {
+  display: none; /* Webkit 기반 브라우저에서 스크롤 바 숨기기 */
+}
+
+.avatar-group-container.dragging {
+  cursor: grabbing; /* 드래그 중임을 나타내는 커서 */
 }
 
 .ant-avatar {
@@ -112,8 +123,9 @@ body {
 
 .avatar-wrapper {
   flex: 0 0 auto; /* 아바타가 줄 바꿈되지 않도록 설정 */
-  margin-right: 10px; /* 아바타 간 간격 설정 */
-  margin-bottom: 15px;
+  margin-right: 5px; /* 아바타 간 간격 설정 */
+  margin-bottom: -5px;
+  margin-top: -20px;
 }
 
 .text-d-day-wrapper {
@@ -257,4 +269,15 @@ body {
   margin-bottom: 5px; /* 각 div 사이에 공간을 추가 */
   font-family: "SeoulHangangC", sans-serif; /* 폰트 설정 (옵션) */
   font-size: 25px; /* 글씨 크기 설정 (옵션) */
+}
+
+/* main.css 또는 별도의 CSS 파일에 추가 */
+.custom-float-button {
+  position: fixed;
+  right: 50px; /* 오른쪽에서 20px 위치 */
+  bottom: 80px; /* 하단에서 80px 위치 */
+  z-index: 1000; /* 다른 요소들 위에 표시되도록 z-index 설정 */
+  background-color: #274c77; /* 버튼 배경색 (빨간색) */
+  color: #fff; /* 버튼 아이콘 색상 (흰색) */
+  border: none; /* 기본 버튼 테두리 제거 */
 }

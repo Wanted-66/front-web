@@ -2,6 +2,10 @@ import styles from "./NavigationBar.module.css";
 import smallIcon from "../assets/smallLogo.png";
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
+import Profile from "../assets/profile_icon.png";
+import friend from "../assets/friend_icon.png";
+import list from "../assets/list.png";
+import home from "../assets/home.png";
 
 const BottomNavigationBar = () => {
   const location = useLocation();
@@ -13,12 +17,14 @@ const BottomNavigationBar = () => {
     <div>
       <nav className={styles.bottomNavigationBar}>
         <div className={styles.navItem}>
-          <img src="home_icon.png" alt="Home" />
-          <span>Home</span>
+          <Link to="/MyList">
+            <img src={home} alt="Home" />
+          </Link>
         </div>
         <div className={styles.navItem}>
-          <img src="search_icon.png" alt="Search" />
-          <span>Search</span>
+          <Link to="/List">
+            <img src={list} alt="List" />
+          </Link>
         </div>
         <div className={styles.bottomCounter}>
           <div className={styles.circleContainer}>
@@ -30,13 +36,13 @@ const BottomNavigationBar = () => {
           </div>
         </div>
         <div className={styles.navItem}>
-          <img src="notifications_icon.png" alt="Notifications" />
-          <span>Notifications</span>
+          <Link to="/Friend">
+            <img src={friend} alt="friend" />
+          </Link>
         </div>
         <div className={styles.navItem}>
           <Link to="/mypage">
-            <img src="profile_icon.png" alt="Profile" />
-            <span>Profile</span>
+            <img src={Profile} alt="Profile" />
           </Link>
         </div>
       </nav>

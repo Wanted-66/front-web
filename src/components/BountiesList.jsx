@@ -1,11 +1,10 @@
-//현상금 이력 페이지
 import React, { useContext } from "react";
 import { Button, Card } from "antd";
 import { AntDesignOutlined } from "@ant-design/icons";
-import { AppContext } from "../AppContext";
 import { css } from "@emotion/react";
 import { useNavigate } from "react-router-dom";
 
+// GradientButton 컴포넌트 정의
 const GradientButton = ({ post }) => {
   const navigate = useNavigate();
 
@@ -36,7 +35,7 @@ const GradientButton = ({ post }) => {
   `;
 
   const handleButtonClick = () => {
-    navigate(`/bounties/${post.id}`, { state: { post } });
+    navigate(`/PostDetail/${post.id}`, { state: { post } });
   };
 
   return (
@@ -52,8 +51,31 @@ const GradientButton = ({ post }) => {
   );
 };
 
+// BountiesList 컴포넌트 정의
 const BountiesList = () => {
-  const { bounties } = useContext(AppContext);
+  // 임시 데이터 정의
+  const bounties = [
+    {
+      id: 1,
+      title: "범죄자: 김철수",
+      description:
+        "최근 도난 사건의 주요 용의자입니다. 정보 제공 시 보상 제공.",
+    },
+    {
+      id: 2,
+      title: "범죄자: 박영희",
+      description: "사기 사건의 피의자입니다. 목격자 정보는 보상 대상입니다.",
+    },
+    {
+      id: 3,
+      title: "범죄자: 이민호",
+      description:
+        "강도 사건에 연루된 용의자입니다. 제공된 정보는 철저히 조사됩니다.",
+    },
+  ];
+
+  // 실제 AppContext 사용 시 주석 처리
+  // const { bounties } = useContext(AppContext);
 
   if (!bounties || bounties.length === 0) {
     return <p>현상금 이력이 없습니다.</p>;
