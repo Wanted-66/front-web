@@ -16,7 +16,7 @@ body {
   flex-direction: column;
   align-items: center;
   text-align: center;
-  height: calc(100vh - 160px); /* 페이지가 화면 전체를 채우도록 설정 */
+  /* height: calc(100vh - 160px); 페이지가 화면 전체를 채우도록 설정 */
   box-sizing: border-box;
 }
 

@@ -181,3 +181,14 @@
   color: #666;
   line-height: 1.5;
 }
+
+.register-container .steps-content {
+  position: relative;
+}
+
+.register-container .steps-content .ant-spin {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}

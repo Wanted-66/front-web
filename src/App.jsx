@@ -5,7 +5,7 @@ import Main from "./main";
 import MyPage from "./components/MyPage";
 import Register from "./components/Register";
 import Arrest from "./components/Arrest";
-import List from "./components/List";
+import ListComponent from "./components/List";
 import PostDetail from "./components/PostDetail";
 import LoginPage from "./components/LoginPage";
 import Vote from "./components/Vote";
@@ -49,17 +49,18 @@ function App() {
             <Route path="/mypage" element={<MyPage />} />
             <Route path="/register" element={<Register />} />
             <Route path="/Arrest" element={<Arrest />} />
-            <Route path="/List" element={<List />} />
-            <Route path="/post/:postId" element={<PostDetail />} />
-            <Route path="Login" element={<LoginPage />} />
+            {/* <Route path="/List" element={<List />} /> */}
+            <Route path="/post/:wantedId" element={<PostDetail />} />
+            <Route path="/login" element={<LoginPage />} />
             <Route path="/Vote" element={<Vote />} />
             <Route path="/wanted" element={<WantedList />} />
             <Route path="/bounties" element={<BountiesList />} />
             <Route path="/reports" element={<ReportsList />} />
-            <Route path="/SendFriendRequest" element={<SendFriendRequest />} />
+            <Route path="/sendFriendRequest" element={<SendFriendRequest />} />
             <Route path="/friend" element={<FriendList />} />
             <Route path="/myList" element={<MyReportList />} />
             <Route path="/result" element={<Result />} />
+            <Route path="/list/:userEmail" element={<ListComponent />} />
           </Routes>
           <BottomNavigationBar></BottomNavigationBar>
         </Router>
