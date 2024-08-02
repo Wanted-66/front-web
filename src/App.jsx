@@ -26,10 +26,6 @@ import Result from "./components/Result";
 function App() {
   const [messageApi, contextHolder] = message.useMessage();
 
-  /*const info = () => {
-    messageApi.info("Hello, Ant Design!");
-  };*/
-
   return (
     <>
       <AppProvider>
@@ -48,7 +44,8 @@ function App() {
             <Route path="/" element={<Main />} />
             <Route path="/mypage" element={<MyPage />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/Arrest" element={<Arrest />} />
+            {/* <Route path="/Arrest" element={<Arrest />} /> */}
+            <Route path="/post/:wantedId/Arrest" element={<Arrest />} />
             {/* <Route path="/List" element={<List />} /> */}
             <Route path="/post/:wantedId" element={<PostDetail />} />
             <Route path="/login" element={<LoginPage />} />

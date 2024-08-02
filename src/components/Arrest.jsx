@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import "./Arrest.css";
 import {
   LoadingOutlined,
@@ -32,9 +32,10 @@ const beforeUpload = (file) => {
 
 const Arrest = ({ userName }) => {
   const [loading, setLoading] = useState(false);
-  const [imageUrl, setImageUrl] = useState(null);
-  const [description, setDescription] = useState(""); // 상황 설명
+  const [imageFile, setImageFile] = useState(null);
+  const [description, setDescription] = useState("");
   const navigate = useNavigate();
+  const { wantedId } = useParams(); // URL에서 wantedId를 가져옴
 
   const handleChange = (info) => {
     if (info.file.status === "uploading") {
@@ -42,9 +43,9 @@ const Arrest = ({ userName }) => {
       return;
     }
     if (info.file.status === "done") {
+      setImageFile(info.file.originFileObj);
       getBase64(info.file.originFileObj, (url) => {
         setLoading(false);
-        setImageUrl(url);
       });
     } else if (info.file.status === "error") {
       setLoading(false);
@@ -52,11 +53,42 @@ const Arrest = ({ userName }) => {
     }
   };
 
-  const handleSubmit = () => {
-    if (imageUrl) {
-      localStorage.setItem("uploadedImageUrl", imageUrl);
-      localStorage.setItem("description", description);
-      navigate("/vote");
+  const handleSubmit = async () => {
+    if (imageFile && description.trim()) {
+      const formData = new FormData();
+      formData.append("description", description);
+      formData.append("userEmail", userName);
+      formData.append("image", imageFile);
+
+      console.log("Form Data: ", formData);
+      console.log("wantedId: ", wantedId);
+      // FormData 내용 확인
+      formData.forEach((value, key) => {
+        console.log(`${key}: ${value}`);
+      });
+
+      try {
+        const response = await fetch(
+          `https://wanted66.r-e.kr/api/wanted/${wantedId}/report`,
+          {
+            method: "POST",
+            body: formData,
+          }
+        );
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          console.error("Server Error:", errorData);
+          throw new Error(`Error: ${errorData.description}`);
+        }
+
+        const data = await response.json();
+        message.success("제보가 성공적으로 제출되었습니다.");
+        navigate("/vote");
+      } catch (err) {
+        console.error("Failed to submit report:", err);
+        message.error("제보 제출에 실패했습니다.");
+      }
     } else {
       message.error("이미지와 상황설명을 모두 입력해 주세요.");
     }
@@ -85,10 +117,9 @@ const Arrest = ({ userName }) => {
             beforeUpload={beforeUpload}
             onChange={handleChange}
             customRequest={({ file, onSuccess, onError }) => {
-              // simulate an upload
               setTimeout(() => {
                 getBase64(file, (url) => {
-                  setImageUrl(url);
+                  setImageFile(file);
                   setLoading(false);
                   onSuccess();
                 });
@@ -96,9 +127,9 @@ const Arrest = ({ userName }) => {
             }}
             style={{ width: "100%", height: "100%" }}
           >
-            {imageUrl ? (
+            {imageFile ? (
               <img
-                src={imageUrl}
+                src={URL.createObjectURL(imageFile)}
                 alt="avatar"
                 style={{ width: "100%", height: "100%", objectFit: "cover" }}
               />
@@ -114,7 +145,7 @@ const Arrest = ({ userName }) => {
             placeholder="상황 설명"
             style={{ height: 120, resize: "none" }}
             value={description}
-            onChange={(e) => setDescription(e.target.value)} // 상태 업데이트
+            onChange={(e) => setDescription(e.target.value)}
           />
         </div>
         <div className="submit-button">

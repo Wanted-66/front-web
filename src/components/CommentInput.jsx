@@ -1,24 +1,57 @@
-import React, { useState } from "react";
-import { Input, Button, message } from "antd";
+import React, { useState, useEffect } from "react";
+import { Input, Button, message, Spin } from "antd";
 import { css } from "@emotion/css";
 import "./PostDetail.css";
+import CommentList from "./CommentList"; // CommentList를 임포트합니다.
 
 const { TextArea } = Input;
 
 const CommentInput = ({ onSubmit, wantedId }) => {
   const [comment, setComment] = useState("");
-  const [author, setAuthor] = useState(""); // 유저 이름 상태 추가
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [comments, setComments] = useState([]); // 댓글 목록 상태 추가
+  const [noCommentsMessageVisible, setNoCommentsMessageVisible] =
+    useState(true); // 댓글이 없다는 메시지의 가시성 상태 추가
+
+  // 댓글 목록을 불러오는 함수
+  const fetchComments = async () => {
+    try {
+      const response = await fetch(
+        `https://wanted66.r-e.kr/api/wanted/${wantedId}/comment`,
+        {
+          method: "GET",
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+
+      const data = await response.json();
+      setComments(data); // 댓글 목록 상태 업데이트
+
+      // 댓글이 없을 때만 메시지 표시
+      setNoCommentsMessageVisible(data.length === 0);
+    } catch (err) {
+      console.error("Failed to fetch comments:", err);
+      setError(err.message);
+      message.error("Failed to fetch comments.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchComments(); // 컴포넌트가 마운트될 때 댓글 목록 불러오기
+  }, [wantedId]);
 
   const handleCommentChange = (e) => {
     setComment(e.target.value);
   };
 
-  const handleAuthorChange = (e) => {
-    setAuthor(e.target.value);
-  };
-
   const handleSubmit = async () => {
-    if (comment.trim() && author.trim()) {
+    if (comment.trim()) {
       try {
         const response = await fetch(
           `https://wanted66.r-e.kr/api/wanted/${wantedId}/comment`,
@@ -29,7 +62,7 @@ const CommentInput = ({ onSubmit, wantedId }) => {
             },
             body: JSON.stringify({
               content: comment.trim(),
-              writerEmail: author.trim(), // 이메일로 사용
+              writerEmail: "user@naver.com", // 이메일 필드가 필요 없는 경우
             }),
           }
         );
@@ -39,53 +72,61 @@ const CommentInput = ({ onSubmit, wantedId }) => {
         }
 
         const data = await response.json();
-        // 댓글 작성 성공 후 상위 컴포넌트에 새로운 댓글 전달
-        onSubmit({
-          text: data.content,
-          user: data.username,
-          date: data.writeDate,
-        });
+        // 댓글 작성 성공 후 댓글 목록 갱신
+        setComments((prevComments) => [
+          ...prevComments,
+          {
+            text: data.content,
+            user: data.username,
+            date: data.writeDate,
+          },
+        ]);
 
-        // 입력 필드 초기화
-        setComment("");
-        setAuthor("");
+        setComment(""); // 입력 필드 초기화
+
+        // 댓글이 추가된 후, 댓글이 없다는 메시지 숨기기
+        setNoCommentsMessageVisible(false);
       } catch (err) {
         console.error("Failed to submit comment:", err);
-        message.error("Failed to submit comment.");
+        message.error("처리중입니다.");
       }
     } else {
-      message.warning("Please enter both comment and nickname.");
+      message.warning("Please enter a comment.");
     }
   };
 
+  if (loading) {
+    return <Spin size="large" />;
+  }
+
+  if (error) {
+    return <div className="error-message">{error}</div>;
+  }
+
   return (
-    <div className="comment-input-container">
-      <Input
-        value={author}
-        onChange={handleAuthorChange}
-        placeholder="이메일 입력"
-        className={inputStyle}
-        style={{ marginBottom: 10 }}
-      />
-      <TextArea
-        value={comment}
-        onChange={handleCommentChange}
-        placeholder="댓글을 입력하세요"
-        autoSize={{ minRows: 3, maxRows: 6 }}
-        className={textAreaStyle}
-      />
-      <Button type="primary" onClick={handleSubmit} className={buttonStyle}>
-        댓글 작성
-      </Button>
+    <div>
+      <div className="comment-input-container">
+        <TextArea
+          value={comment}
+          onChange={handleCommentChange}
+          placeholder="댓글을 입력하세요"
+          autoSize={{ minRows: 3, maxRows: 6 }}
+          className={textAreaStyle}
+        />
+        <Button type="primary" onClick={handleSubmit} className={buttonStyle}>
+          댓글 작성
+        </Button>
+      </div>
+      {/* 댓글이 없다는 메시지와 댓글 목록을 조건부로 렌더링 */}
+      {noCommentsMessageVisible && comments.length === 0 && (
+        <div className="no-comments-message">댓글이 없습니다.</div>
+      )}
+      <CommentList comments={comments} /> {/* 댓글 목록 컴포넌트 추가 */}
     </div>
   );
 };
 
 // 스타일 정의
-const inputStyle = css`
-  margin-bottom: 10px;
-`;
-
 const textAreaStyle = css`
   margin-bottom: 10px;
 `;

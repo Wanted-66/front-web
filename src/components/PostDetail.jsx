@@ -66,7 +66,7 @@ const PostDetail = () => {
   };
 
   const handleArrestClick = () => {
-    navigate("/Arrest");
+    navigate(`/post/${post.id}/arrest`);
   };
 
   return (
@@ -79,11 +79,7 @@ const PostDetail = () => {
       </div>
 
       {post.mainImage && (
-        <img
-          src={`https://wanted66.r-e.kr/api/wanted/image/${post.mainImage}`}
-          alt="표지 사진"
-          className="post-image"
-        />
+        <img src={post.mainImage} alt="표지 사진" className="post-image" />
       )}
       <div className="post-info">
         <p>
