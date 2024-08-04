@@ -1,11 +1,18 @@
-import React, { useState, useRef, useEffect } from "react";
-import { Layout, Progress, Avatar, Button, Calendar, message } from "antd";
+import React, { useState, useEffect, useRef } from "react";
+import {
+  Layout,
+  Progress,
+  Avatar,
+  Button,
+  Calendar,
+  message,
+  Spin,
+} from "antd";
 import { useNavigate } from "react-router-dom";
 import { FloatButton } from "antd";
-import avatar1 from "./assets/image.png";
+import { EditOutlined } from "@ant-design/icons";
 import "./main.css";
 import moment from "moment";
-import { EditOutlined } from "@ant-design/icons";
 
 const { Content, Footer } = Layout;
 
@@ -15,18 +22,29 @@ const Main = () => {
   const [endDate, setEndDate] = useState(null);
   const [daysLeft, setDaysLeft] = useState(null);
   const [progressPercentage, setProgressPercentage] = useState(0);
-  const [showBlankScreen, setShowBlankScreen] = useState(false);
+  const [loading, setLoading] = useState(true); // 로딩 상태 추가
   const containerRef = useRef(null); // 컨테이너의 참조를 위한 Ref
   const navigate = useNavigate();
 
-  const addAvatar = (newAvatarSrc) => {
-    setAvatars([...avatars, newAvatarSrc]);
+  // Fetch avatars from API
+  const fetchAvatars = async () => {
+    try {
+      const response = await fetch("https://api.example.com/user/avatars"); // 실제 API 엔드포인트로 교체 필요
+      if (!response.ok) {
+        throw new Error("아바타를 가져오는 데 실패했습니다.");
+      }
+      const data = await response.json();
+      setAvatars(data); // API에서 받은 아바타 데이터 설정
+    } catch (error) {
+      message.error(error.message);
+    } finally {
+      setLoading(false); // 로딩 종료
+    }
   };
 
-  const handleAddAvatar = () => {
-    const newAvatarSrc = avatar1;
-    addAvatar(newAvatarSrc);
-  };
+  useEffect(() => {
+    fetchAvatars(); // 컴포넌트 마운트 시 아바타 데이터 가져오기
+  }, []);
 
   const calculateDaysLeft = (selectedDate) => {
     const today = moment().startOf("day");
@@ -58,7 +76,7 @@ const Main = () => {
       const leftDays = calculateDaysLeft(selectedEndDate);
       setDaysLeft(leftDays);
       setProgressPercentage(calculateProgress(selectedEndDate));
-      setShowBlankScreen(leftDays <= 0);
+      //setShowBlankScreen(leftDays <= 0);
     }
   };
 
@@ -83,51 +101,58 @@ const Main = () => {
   // 드래그 기능 추가
   useEffect(() => {
     const container = containerRef.current;
-    let isDragging = false;
-    let startX;
-    let scrollLeft;
 
-    const handleMouseDown = (e) => {
-      isDragging = true;
-      startX = e.pageX - container.offsetLeft;
-      scrollLeft = container.scrollLeft;
-      container.classList.add("dragging"); // 드래그 중 클래스 추가
-    };
+    if (container) {
+      let isDragging = false;
+      let startX;
+      let scrollLeft;
 
-    const handleMouseLeave = () => {
-      isDragging = false;
-      container.classList.remove("dragging"); // 드래그 중 클래스 제거
-    };
+      const handleMouseDown = (e) => {
+        isDragging = true;
+        startX = e.pageX - container.offsetLeft;
+        scrollLeft = container.scrollLeft;
+        container.classList.add("dragging"); // 드래그 중 클래스 추가
+      };
 
-    const handleMouseUp = () => {
-      isDragging = false;
-      container.classList.remove("dragging"); // 드래그 중 클래스 제거
-    };
+      const handleMouseLeave = () => {
+        isDragging = false;
+        container.classList.remove("dragging"); // 드래그 중 클래스 제거
+      };
 
-    const handleMouseMove = (e) => {
-      if (!isDragging) return;
-      e.preventDefault();
-      const x = e.pageX - container.offsetLeft;
-      const walk = (x - startX) * 2; // 이동 속도 조절
-      container.scrollLeft = scrollLeft - walk;
-    };
+      const handleMouseUp = () => {
+        isDragging = false;
+        container.classList.remove("dragging"); // 드래그 중 클래스 제거
+      };
 
-    container.addEventListener("mousedown", handleMouseDown);
-    container.addEventListener("mouseleave", handleMouseLeave);
-    container.addEventListener("mouseup", handleMouseUp);
-    container.addEventListener("mousemove", handleMouseMove);
+      const handleMouseMove = (e) => {
+        if (!isDragging) return;
+        e.preventDefault();
+        const x = e.pageX - container.offsetLeft;
+        const walk = (x - startX) * 2; // 이동 속도 조절
+        container.scrollLeft = scrollLeft - walk;
+      };
 
-    return () => {
-      container.removeEventListener("mousedown", handleMouseDown);
-      container.removeEventListener("mouseleave", handleMouseLeave);
-      container.removeEventListener("mouseup", handleMouseUp);
-      container.removeEventListener("mousemove", handleMouseMove);
-    };
-  }, []);
+      container.addEventListener("mousedown", handleMouseDown);
+      container.addEventListener("mouseleave", handleMouseLeave);
+      container.addEventListener("mouseup", handleMouseUp);
+      container.addEventListener("mousemove", handleMouseMove);
 
-  const handleAvatarClick = () => {
-    navigate("/postDetail");
+      return () => {
+        container.removeEventListener("mousedown", handleMouseDown);
+        container.removeEventListener("mouseleave", handleMouseLeave);
+        container.removeEventListener("mouseup", handleMouseUp);
+        container.removeEventListener("mousemove", handleMouseMove);
+      };
+    }
+  }, [avatars]); // avatars 변경 시에만 실행되도록 의존성 배열 추가
+
+  const handleAvatarClick = (avatarId) => {
+    navigate(`/postDetail/${avatarId}`); // 아바타 ID를 사용하여 상세 페이지로 이동
   };
+
+  if (loading) {
+    return <Spin size="large" />;
+  }
 
   return (
     <Layout className="main-container">
@@ -139,14 +164,13 @@ const Main = () => {
               avatars.length > 0 ? "has-avatars" : ""
             }`}
           >
-            {avatars.map((src, index) => (
-              <div key={index} className="avatar-wrapper">
+            {avatars.map((avatar) => (
+              <div key={avatar.id} className="avatar-wrapper">
                 <Avatar
-                  key={index}
-                  src={src}
+                  src={avatar.imageUrl}
                   size={125}
                   style={{ boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)" }}
-                  onClick={handleAvatarClick}
+                  onClick={() => handleAvatarClick(avatar.id)}
                 />
               </div>
             ))}
@@ -208,11 +232,6 @@ const Main = () => {
             <br />
             목욕도 마찬가지다. 그래서 매일 하라고 하는 것이다.
             <br />- 지그 지글러 -
-          </div>
-          <div className="submit-button">
-            <Button type="primary" onClick={handleAddAvatar}>
-              Add Avatar
-            </Button>
           </div>
         </Content>
       </div>

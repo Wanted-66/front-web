@@ -1,30 +1,59 @@
 import React, { useEffect, useState } from "react";
 import { Pie } from "react-chartjs-2";
 import { Chart as ChartJS, Title, Tooltip, Legend, ArcElement } from "chart.js";
-import { Button } from "antd";
+import { Button, message } from "antd";
 import { useNavigate } from "react-router-dom";
 import "./Result.css";
 
 ChartJS.register(Title, Tooltip, Legend, ArcElement);
 
 const Result = () => {
-  //const [voteCounts, setVoteCounts] = useState({ approve: 0, disapprove: 0 });
   const navigate = useNavigate();
+  const [voteCounts, setVoteCounts] = useState({ approve: 0, disapprove: 0 });
+  const [isVotingEnded, setIsVotingEnded] = useState(false);
 
-  //   useEffect(() => {
-  //     // 로컬 스토리지에서 투표 결과를 가져옴
-  //     const savedVoteCounts = JSON.parse(localStorage.getItem("voteCounts")) || {
-  //       approve: 0,
-  //       disapprove: 0,
-  //     };
-  //     setVoteCounts(savedVoteCounts);
-  //   }, []);
+  useEffect(() => {
+    const checkIfVotingEnded = () => {
+      const startTime = localStorage.getItem("postStartTime");
+      if (startTime) {
+        const deadline = new Date(
+          parseInt(startTime) + 7 * 24 * 60 * 60 * 1000
+        ); // 1주일 후
+        const now = new Date();
+        if (now > deadline) {
+          setIsVotingEnded(true);
+        } else {
+          setIsVotingEnded(false);
+        }
+      }
+    };
 
-  //   const handleResetVotes = () => {
-  //     localStorage.removeItem("voteCounts");
-  //     setVoteCounts({ approve: 0, disapprove: 0 });
-  //   };
-  const voteCounts = { approve: 80, disapprove: 20 };
+    const fetchVoteCounts = async () => {
+      if (isVotingEnded) {
+        try {
+          const response = await fetch(
+            "https://your-api-endpoint.com/vote-counts"
+          );
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(`Error: ${errorData.description}`);
+          }
+
+          const data = await response.json();
+          setVoteCounts(data.voteCounts);
+        } catch (err) {
+          console.error("Failed to fetch vote counts:", err);
+          // 오류 처리
+        }
+      } else {
+        message.error("투표 시간이 아직 종료되지 않았습니다.");
+        navigate("/vote"); // 투표 페이지로 리디렉션
+      }
+    };
+
+    checkIfVotingEnded();
+    fetchVoteCounts();
+  }, [navigate, isVotingEnded]);
 
   const data = {
     labels: ["찬성", "반대"],
@@ -32,8 +61,8 @@ const Result = () => {
       {
         label: "투표 결과",
         data: [voteCounts.approve, voteCounts.disapprove],
-        backgroundColor: ["#04befe", "#ff4d4f"], // 파란색과 빨간색
-        borderColor: ["#ffffff", "#ffffff"], // 흰색 테두리
+        backgroundColor: ["#04befe", "#ff4d4f"],
+        borderColor: ["#ffffff", "#ffffff"],
         borderWidth: 2,
       },
     ],

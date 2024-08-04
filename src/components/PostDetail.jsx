@@ -6,15 +6,15 @@ import CommentInput from "./CommentInput";
 import CommentList from "./CommentList";
 
 const PostDetail = () => {
-  const { wantedId } = useParams(); // URL 파라미터에서 wantedId를 추출
+  const { wantedId, reportId } = useParams(); // URL 파라미터에서 wantedId와 reportId를 추출
   const [post, setPost] = useState(null);
+  const [report, setReport] = useState(null); // 추가된 부분
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log("Wanted ID:", wantedId);
     const fetchPost = async () => {
       if (!wantedId) {
         setError("No post ID provided.");
@@ -35,7 +35,6 @@ const PostDetail = () => {
         }
 
         const data = await response.json();
-        console.log("Fetched Post Data:", data); // 응답 데이터 확인
         setPost(data);
       } catch (err) {
         console.error("Fetch post error:", err);
@@ -48,6 +47,32 @@ const PostDetail = () => {
 
     fetchPost();
   }, [wantedId]);
+
+  useEffect(() => {
+    const fetchReport = async () => {
+      if (!reportId) return;
+
+      try {
+        const response = await fetch(
+          `https://wanted66.r-e.kr/api/wanted/${wantedId}/report/${reportId}`
+        );
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(`Error: ${errorData.description}`);
+        }
+
+        const data = await response.json();
+        setReport(data);
+      } catch (err) {
+        console.error("Fetch report error:", err);
+        setError(err.message);
+        message.error("Failed to load report details.");
+      }
+    };
+
+    fetchReport();
+  }, [wantedId, reportId]);
 
   if (loading) {
     return <Spin size="large" />;
@@ -89,12 +114,9 @@ const PostDetail = () => {
           <strong>설명:</strong> {post.description || "정보 없음"}
         </p>
         <p>
-          {/* <strong>카테고리:</strong>{" "}
-          {post.category === "기타" ? post.customCategory : post.category} */}
           <strong>카테고리:</strong> {post.category || "정보 없음"}
         </p>
         <p>
-          {/* <strong>날짜 범위:</strong> {post.dateRange[0]} ~ {post.dateRange[1]} */}
           <strong>날짜 범위:</strong> {post.startDate} ~ {post.endDate}
         </p>
         <p>
@@ -105,6 +127,31 @@ const PostDetail = () => {
           {post.prize ? post.prize.toLocaleString() : "정보 없음"} 원
         </p>
       </div>
+
+      {report && (
+        <div className="report-info">
+          <h2>제보 상세 정보</h2>
+          <p>
+            <strong>제보자:</strong> {report.username}
+          </p>
+          <p>
+            <strong>제보 설명:</strong> {report.description}
+          </p>
+          {report.image && (
+            <img
+              src={report.image}
+              alt="제보 이미지"
+              className="report-image"
+            />
+          )}
+          <p>
+            <strong>제보 상태:</strong> {report.status}
+          </p>
+          <p>
+            <strong>등록일:</strong> {report.registrationDate}
+          </p>
+        </div>
+      )}
 
       <div className="comments-section">
         <h2>댓글</h2>

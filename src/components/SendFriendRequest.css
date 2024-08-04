@@ -23,20 +23,70 @@ body {
   margin-top: 5px; /* 상단 여백 추가 */
 }
 
-.profile-image {
-  width: 100%;
-  max-width: 400px; /* 최대 너비 설정 */
-  height: auto; /* 비율 유지 */
-  border-radius: 50%;
-  margin-bottom: 20px; /* 이미지와 텍스트 사이의 간격 */
-}
-
-.name-title {
-  margin-top: 10px; /* 제목 위쪽 여백 */
-  text-align: center;
-}
-
 .user-title {
   display: block;
   text-align: center;
+}
+
+.friend-requests {
+  width: 100%;
+  max-width: 600px;
+  margin-top: 20px;
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 10px; /* 각 친구 요청 항목 간의 간격 */
+}
+/* 
+.friend-request {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px; /* 친구 요청 항목 간의 간격 */
+/* } */
+*/ .friend-request:last-child {
+  border-bottom: none; /* 마지막 항목의 하단 경계선 제거 */
+}
+
+.friend-request .friend-info {
+  display: flex;
+  align-items: center;
+  margin-right: 20px;
+}
+
+.friend-request .friend-info img {
+  width: 70px; /* 프로필 이미지 크기 설정 */
+  height: 70px;
+  border-radius: 50%;
+  margin-right: 10px; /* 이미지와 텍스트 사이의 간격 */
+}
+
+.friend-request-buttons {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 25px;
+}
+
+.friend-request-button {
+  flex: 1;
+  margin: 0 5px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 40px; /* 버튼 높이 설정 */
+  font-size: 16px;
+}
+
+.friend-request-buttons .accept-button {
+  background-color: #1890ff;
+  border-color: #1890ff;
+  color: white;
+}
+
+.friend-request-buttons .reject-button {
+  background-color: #ff4d4f;
+  border-color: #ff4d4f;
+  color: white;
 }

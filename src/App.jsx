@@ -25,7 +25,7 @@ import Result from "./components/Result";
 
 function App() {
   const [messageApi, contextHolder] = message.useMessage();
-
+  const userEmail = "user@naver.com";
   return (
     <>
       <AppProvider>
@@ -59,7 +59,7 @@ function App() {
             <Route path="/result" element={<Result />} />
             <Route path="/list/:userEmail" element={<ListComponent />} />
           </Routes>
-          <BottomNavigationBar></BottomNavigationBar>
+          <BottomNavigationBar userEmail={userEmail}></BottomNavigationBar>
         </Router>
       </AppProvider>
     </>

@@ -1,47 +1,17 @@
-import React from "react";
-import { Button, Card } from "antd";
+import React, { useEffect, useState, useContext } from "react";
+import { Spin, message, Card, Button } from "antd";
+import { AppContext } from "../AppContext";
 import { AntDesignOutlined } from "@ant-design/icons";
-import { css } from "@emotion/react";
-import { useNavigate } from "react-router-dom";
 import "./ReportList.css";
 
-// GradientButton 컴포넌트 정의
-const GradientButton = ({ post }) => {
-  const navigate = useNavigate();
-
-  const linearGradientButton = css`
-    &.ant-btn-primary:not([disabled]):not(.ant-btn-dangerous) {
-      border-width: 0;
-      position: relative;
-      overflow: hidden;
-
-      > span {
-        position: relative;
-      }
-
-      &::before {
-        content: "";
-        background: linear-gradient(135deg, #6253e1, #04befe);
-        position: absolute;
-        inset: 0;
-        opacity: 1;
-        transition: all 0.3s;
-        border-radius: inherit;
-      }
-
-      &:hover::before {
-        opacity: 0;
-      }
-    }
-  `;
-
+const GradientButton = ({ report }) => {
   const handleButtonClick = () => {
-    navigate(`/PostDetail/${post.id}`, { state: { post } });
+    // Handle button click here
   };
 
   return (
     <Button
-      className={linearGradientButton}
+      className="gradient-button"
       type="primary"
       size="large"
       icon={<AntDesignOutlined />}
@@ -52,32 +22,72 @@ const GradientButton = ({ post }) => {
   );
 };
 
-// ReportsList 컴포넌트 정의
 const ReportsList = () => {
-  // 샘플 데이터 정의
-  const reports = [
-    {
-      id: 1,
-      title: "제보자: 홍길동",
-      description:
-        "최근에 목격된 사건에 대한 제보입니다. 사건에 대한 자세한 정보가 필요합니다.",
-    },
-    {
-      id: 2,
-      title: "제보자: 이순신",
-      description:
-        "범죄 발생 현장에 대한 제보입니다. 자세한 목격 정보가 포함되어 있습니다.",
-    },
-    {
-      id: 3,
-      title: "제보자: 강감찬",
-      description:
-        "사건과 관련된 중요한 정보를 제공한 제보입니다. 추가 정보가 필요합니다.",
-    },
-  ];
+  const { currentUser } = useContext(AppContext); // 현재 로그인한 사용자 정보
+  const [reports, setReports] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [wantedId, setWantedId] = useState(null);
 
-  // 실제 AppContext 사용 시 주석 처리
-  // const { reports } = useContext(AppContext);
+  useEffect(() => {
+    const fetchWantedId = async () => {
+      if (!currentUser) {
+        setError("로그인 정보가 없습니다.");
+        setLoading(false);
+        return;
+      }
+
+      try {
+        console.log("Fetching Wanted ID for user:", currentUser.email);
+        const response = await fetch(`/api/wanted/all/${currentUser.email}`);
+        const data = await response.json();
+        if (data && data.length > 0) {
+          setWantedId(data[0].id); // 첫 번째 wanted 항목의 id 사용
+        } else {
+          setError("No Wanted IDs found for the current user.");
+        }
+      } catch (err) {
+        console.error("Wanted ID 로드 오류:", err);
+        setError(err.message);
+        message.error("Wanted ID 로드 중 오류가 발생했습니다.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchWantedId();
+  }, [currentUser]);
+
+  useEffect(() => {
+    const fetchReports = async () => {
+      if (!wantedId) return; // wantedId가 없으면 대기
+
+      setLoading(true); // 제보 목록 로딩 시작
+
+      try {
+        console.log("Fetching reports for Wanted ID:", wantedId);
+        const response = await fetch(`/api/wanted/${wantedId}/report`);
+        const data = await response.json();
+        setReports(data);
+      } catch (err) {
+        console.error("제보 이력 로드 오류:", err);
+        setError(err.message);
+        message.error("제보 이력 로드 중 오류가 발생했습니다.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchReports();
+  }, [wantedId]);
+
+  if (loading) {
+    return <Spin size="large" />;
+  }
+
+  if (error) {
+    return <div className="error-message">{error}</div>;
+  }
 
   if (!reports || reports.length === 0) {
     return <p>제보 이력이 없습니다.</p>;
@@ -89,7 +99,7 @@ const ReportsList = () => {
       {reports.map((report) => (
         <Card
           key={report.id}
-          title={<div className="card-title">{report.title}</div>}
+          title={<div className="card-title">{report.username}</div>}
           style={{ width: "100%", textAlign: "left", marginBottom: "16px" }}
         >
           <div
@@ -100,7 +110,7 @@ const ReportsList = () => {
             }}
           >
             <div className="card-content">{report.description}</div>
-            <GradientButton post={report} />
+            <GradientButton report={report} />
           </div>
         </Card>
       ))}

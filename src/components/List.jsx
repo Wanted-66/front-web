@@ -1,4 +1,3 @@
-// ListComponent.jsx
 import React, { useEffect, useState, useContext } from "react";
 import "./List.css";
 import { Button, ConfigProvider, Card, Spin, message } from "antd";
@@ -58,9 +57,31 @@ const GradientButton = ({ post }) => {
 
 const ListComponent = () => {
   const { userEmail } = useParams(); // URL 파라미터에서 userEmail 추출
+  const { currentUser } = useContext(AppContext); // 현재 로그인한 사용자 정보
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  // 예시 데이터
+  const examplePosts = [
+    {
+      id: 1,
+      title: "예시 제목 1",
+      description: "이것은 예시 게시물 1입니다.",
+      authorEmail: "example1@example.com",
+    },
+    {
+      id: 2,
+      title: "예시 제목 2",
+      description: "이것은 예시 게시물 2입니다.",
+      authorEmail: "example2@example.com",
+    },
+    {
+      id: 3,
+      title: "예시 제목 3",
+      description: "이것은 예시 게시물 3입니다.",
+      authorEmail: "example3@example.com",
+    },
+  ];
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -95,6 +116,25 @@ const ListComponent = () => {
     fetchPosts();
   }, [userEmail]);
 
+  const handleDelete = async (postId) => {
+    try {
+      const response = await fetch(
+        `https://wanted66.r-e.kr/api/wanted/${postId}`,
+        {
+          method: "DELETE",
+        }
+      );
+      if (!response.ok) {
+        throw new Error(`삭제 요청 실패: ${response.statusText}`);
+      }
+      setPosts(posts.filter((post) => post.id !== postId));
+      message.success("게시물이 삭제되었습니다.");
+    } catch (err) {
+      console.error("게시물 삭제 오류:", err);
+      message.error("게시물 삭제 중 오류가 발생했습니다.");
+    }
+  };
+
   if (loading) {
     return <Spin size="large" />;
   }
@@ -113,6 +153,14 @@ const ListComponent = () => {
             key={post.id}
             title={<div className="card-title">{post.title}</div>}
             style={{ width: "100%", textAlign: "left", marginBottom: "16px" }}
+            extra={
+              currentUser &&
+              post.authorEmail === currentUser.email && ( // currentUser가 존재하는지 확인
+                <Button type="danger" onClick={() => handleDelete(post.id)}>
+                  삭제
+                </Button>
+              )
+            }
           >
             <div
               style={{

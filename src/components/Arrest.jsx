@@ -35,7 +35,7 @@ const Arrest = ({ userName }) => {
   const [imageFile, setImageFile] = useState(null);
   const [description, setDescription] = useState("");
   const navigate = useNavigate();
-  const { wantedId } = useParams(); // URL에서 wantedId를 가져옴
+  const { wantedId } = useParams();
 
   const handleChange = (info) => {
     if (info.file.status === "uploading") {
@@ -60,13 +60,6 @@ const Arrest = ({ userName }) => {
       formData.append("userEmail", userName);
       formData.append("image", imageFile);
 
-      console.log("Form Data: ", formData);
-      console.log("wantedId: ", wantedId);
-      // FormData 내용 확인
-      formData.forEach((value, key) => {
-        console.log(`${key}: ${value}`);
-      });
-
       try {
         const response = await fetch(
           `https://wanted66.r-e.kr/api/wanted/${wantedId}/report`,
@@ -78,12 +71,26 @@ const Arrest = ({ userName }) => {
 
         if (!response.ok) {
           const errorData = await response.json();
-          console.error("Server Error:", errorData);
           throw new Error(`Error: ${errorData.description}`);
         }
 
         const data = await response.json();
         message.success("제보가 성공적으로 제출되었습니다.");
+
+        // 친구들에게 알림 발송
+        await fetch("https://your-api-endpoint.com/notify-friends", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            description: description,
+            imageUrl: data.imageUrl, // 서버에서 받은 이미지 URL
+            wantedId: wantedId,
+            userEmail: userName,
+          }),
+        });
+
         navigate("/vote");
       } catch (err) {
         console.error("Failed to submit report:", err);

@@ -14,31 +14,53 @@
   box-sizing: border-box;
 }
 
+.friend-list-tabs {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.ant-tabs-nav {
+  display: flex !important;
+  justify-content: center !important;
+}
+
+.ant-tabs-tab {
+  width: auto;
+  display: flex;
+  justify-content: center;
+}
+
 .friend-list-card {
   width: 100%;
-  text-align: center;
+  text-align: left;
   margin-bottom: 10px;
 }
 
 .friend-list-card-cover {
   display: flex;
-  justify-content: center;
   align-items: center;
   margin-bottom: 8px;
 }
 
-.friend-list-card-meta {
+.friend-list-card-content {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  text-align: center;
+  padding: 10px;
+  position: relative; /* 포지셔닝을 위해 추가 */
 }
 
 .friend-list-avatar {
-  border-radius: 50%;
-  display: block;
+  /* border-radius: 50%; */
+  /* display: block;
   margin: 0 auto;
-  margin-top: 16px;
+  margin-top: 16px; */
+  border-radius: 50%;
+  margin-right: 20px;
+}
+
+.friend-list-card-meta {
+  flex: 1;
 }
 
 .friend-list-container h2 {
@@ -49,4 +71,88 @@
   color: #333; /* 제목 색상 조정 */
   border-bottom: 2px solid #ddd; /* 제목 아래 선 추가 */
   padding-bottom: 10px; /* 제목과 선 사이 여백 */
+}
+
+.friend-delete-button {
+  border: none;
+  background-color: #ff4d4f;
+  color: white;
+  font-weight: bold;
+  border-radius: 4px;
+  padding: 5px 15px;
+  transition: background-color 0.3s;
+}
+
+.friend-delete-button:hover {
+  background-color: #ff7875;
+}
+
+.friend-list-modal-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.friend-list-modal-avatar {
+  width: 200px; /* 프로필 사진의 크기 */
+  height: 200px; /* 프로필 사진의 크기 */
+  margin-bottom: 20px; /* 사진과 텍스트 사이의 간격 */
+}
+
+.friend-list-modal-info {
+  text-align: center;
+}
+
+.friend-list-modal-info h3 {
+  margin: 0 0 10px;
+  font-size: 30px;
+}
+
+.friend-list-modal-info p {
+  margin: 0;
+  font-size: 16px; /* 한줄 소개 크기 조정 */
+  color: #999; /* 한줄 소개 색상 조정 */
+}
+
+.friend-add-button {
+  border: none;
+  background-color: #407ef6 !important;
+  color: white;
+  font-weight: bold;
+  border-radius: 4px;
+  padding: 5px 15px;
+  transition: background-color 0.3s;
+}
+
+.friend-add-button:hover {
+  background-color: #352acc;
+}
+
+.friend-search-container {
+  width: 100%; /* 검색 컨테이너의 너비를 100%로 설정 */
+  display: flex; /* 내부 요소들을 수평으로 정렬 */
+  justify-content: space-between; /* 입력 필드와 버튼 사이의 공간을 균등하게 배치 */
+  align-items: center; /* 입력 필드와 버튼을 수직으로 중앙에 배치 */
+  padding: 10px; /* 패딩을 추가하여 내부 여백 확보 */
+}
+
+.friend-search-input .ant-input {
+  width: 800px;
+  margin-right: 10px; /* 버튼과의 간격을 위해 오른쪽 마진 추가 */
+  border-radius: 5px; /* 모서리를 둥글게 설정 */
+}
+
+.friend-search-input .ant-input-search-button {
+  border: none;
+  background-color: #407ef6;
+  color: white;
+  font-weight: bold;
+  border-radius: 4px;
+  padding: 5px 15px;
+  transition: background-color 0.3s;
+  height: 32px; /* 버튼 높이 설정 */
+  display: flex; /* 버튼 내부 텍스트 수직 중앙 정렬 */
+  align-items: center;
+  margin-top: 0px;
+  margin-left: -90px;
 }

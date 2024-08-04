@@ -1,5 +1,6 @@
 import React from "react";
 import { Typography, Divider } from "antd";
+import { useNavigate } from "react-router-dom";
 import "./LoginPage.css";
 
 import logoSrc from "../assets/logo.png"; // 로고 이미지 경로
@@ -9,16 +10,12 @@ import kakaoStartImgSrc from "../assets/kakao-start.png";
 const { Title } = Typography;
 
 const LoginPage = () => {
+  const navigate = useNavigate();
+
   // 카카오 로그인 페이지로 리다이렉트
   const handleKakaoLogin = () => {
     window.location.href =
       "https://kauth.kakao.com/oauth/authorize?client_id=YOUR_KAKAO_CLIENT_ID&redirect_uri=YOUR_REDIRECT_URI&response_type=code";
-  };
-
-  // 카카오 시작하기 페이지로 리다이렉트
-  const handleKakaoStart = () => {
-    // 카카오 시작하기 로직 또는 링크
-    alert("카카오 시작하기를 클릭했습니다."); // 실제 링크 또는 로직으로 대체
   };
 
   return (
@@ -40,7 +37,10 @@ const LoginPage = () => {
         <button className="kakao-login-button" onClick={handleKakaoLogin}>
           <img src={kakaoLoginImgSrc} alt="Kakao Login" />
         </button>
-        <button className="kakao-start-button" onClick={handleKakaoStart}>
+        <button
+          className="kakao-start-button"
+          onClick={() => navigate("/start")}
+        >
           <img src={kakaoStartImgSrc} alt="Kakao Start" />
         </button>
       </div>

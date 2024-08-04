@@ -7,7 +7,7 @@ import friend from "../assets/friend_icon.png";
 import list from "../assets/list.png";
 import home from "../assets/home.png";
 
-const BottomNavigationBar = () => {
+const BottomNavigationBar = ({ userEmail }) => {
   const location = useLocation();
   // 로그인 페이지 경로가 "/login"인지 확인
   if (location.pathname === "/Login") {
@@ -22,7 +22,7 @@ const BottomNavigationBar = () => {
           </Link>
         </div>
         <div className={styles.navItem}>
-          <Link to="/List">
+          <Link to={`/list/${userEmail}`}>
             <img src={list} alt="List" />
           </Link>
         </div>
