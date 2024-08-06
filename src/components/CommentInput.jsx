@@ -6,7 +6,7 @@ import CommentList from "./CommentList"; // CommentList를 임포트합니다.
 
 const { TextArea } = Input;
 
-const CommentInput = ({ onSubmit, wantedId }) => {
+const CommentInput = ({  wantedId }) => {
   const [comment, setComment] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -63,6 +63,7 @@ const CommentInput = ({ onSubmit, wantedId }) => {
             body: JSON.stringify({
               content: comment.trim(),
               writerEmail: "user@naver.com", // 이메일 필드가 필요 없는 경우
+              username: "user123", // 여기에 실제 사용자 이름 필드를 입력합니다.
             }),
           }
         );
@@ -76,9 +77,9 @@ const CommentInput = ({ onSubmit, wantedId }) => {
         setComments((prevComments) => [
           ...prevComments,
           {
-            text: data.content,
-            user: data.username,
-            date: data.writeDate,
+            content: data.content,
+            username: data.username, // 댓글 작성자의 이름
+            writeDate: new Date(data.writeDate).toLocaleString(), // 작성 날짜 포맷팅
           },
         ]);
 
@@ -88,10 +89,10 @@ const CommentInput = ({ onSubmit, wantedId }) => {
         setNoCommentsMessageVisible(false);
       } catch (err) {
         console.error("Failed to submit comment:", err);
-        message.error("처리중입니다.");
+        message.error("댓글 작성에 실패했습니다."); // 오류 메시지 수정
       }
     } else {
-      message.warning("Please enter a comment.");
+      message.warning("댓글을 입력하세요.");
     }
   };
 

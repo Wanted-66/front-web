@@ -1,5 +1,4 @@
 // src/components/SendFriendRequest.js
-
 import React, { useState, useEffect } from "react";
 import { Button, Typography, message, Spin } from "antd";
 import profileImage from "../assets/profile_image.png";
@@ -11,12 +10,14 @@ const SendFriendRequest = () => {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true); // 초기 상태를 true로 설정
   const [requesting, setRequesting] = useState(false);
-  const [friendRequests, setFriendRequests] = useState([
-    { id: 1, name: "친구1", profileImg: profileImage },
-    { id: 2, name: "친구2", profileImg: profileImage },
-    { id: 3, name: "친구3", profileImg: profileImage },
-  ]);
+  // const [friendRequests, setFriendRequests] = useState([
+  //   { id: 1, name: "친구1", profileImg: profileImage },
+  //   { id: 2, name: "친구2", profileImg: profileImage },
+  //   { id: 3, name: "친구3", profileImg: profileImage },
+  // ]);
   // 테스트용 이메일 주소
+  const [friendRequests, setFriendRequests] = useState([]);
+  const [accessToken, setAccessToken] = useState("YOUR_ACCESS_TOKEN"); // 액세스 토큰 상태 추가
   const userEmail = "user@naver.com"; // 나중에 지워야함
 
   // 유저의 Wanted 항목 로딩
@@ -62,37 +63,52 @@ const SendFriendRequest = () => {
   // 친구 요청 목록을 가져오는 함수
   useEffect(() => {
     const fetchFriendRequests = async () => {
-      try {
-        const response = await fetch(
-          `https://wanted66.r-e.kr/api/friend-requests/${encodeURIComponent(
-            userEmail
-          )}`
-        );
-        if (!response.ok) {
-          const errorMessage = await response.text(); // 응답 내용을 텍스트로 읽기
-          throw new Error(
-            `HTTP error! status: ${response.status}, message: ${errorMessage}`
-          );
-        }
-        const data = await response.json();
-        setFriendRequests(data);
-      } catch (error) {
-        message.error("친구 요청 목록을 가져오는 데 실패했습니다.");
-        console.error("Failed to fetch friend requests:", error.message); // 자세한 오류 메시지 로그
+    try {
+      if (!accessToken) {
+        throw new Error("액세스 토큰이 없습니다.");
       }
-    };
+
+      const response = await fetch(
+        "https://wanted66.r-e.kr/api/friend/request", // API 엔드포인트 업데이트
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${accessToken}`, // 헤더에 액세스 토큰 추가
+          },
+        }
+      );
+      if (!response.ok) {
+        const errorMessage = await response.text();
+        throw new Error(`HTTP error! status: ${response.status}, message: ${errorMessage}`);
+      }
+      const data = await response.json();
+      setFriendRequests(data);
+    } catch (error) {
+      message.error("친구 요청 목록을 가져오는 데 실패했습니다.");
+      console.error("Failed to fetch friend requests:", error.message);
+    }
+  };
 
     fetchFriendRequests();
-  }, [userEmail]);
+  }, [accessToken]);
 
   // 친구 요청을 수락하는 함수
   const handleAcceptRequest = async (requestId) => {
     setRequesting(true);
     try {
       const response = await fetch(
-        `https://wanted66.r-e.kr/api/friend-request/accept/${requestId}`,
+        `https://wanted66.r-e.kr/api/friend`,
         {
-          method: "POST",
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${accessToken}`,
+          },
+          body: JSON.stringify({
+            senderId: requestId, // 또는 적절한 값으로 설정 (수정해야함)
+            receiverId: userEmail, // 또는 적절한 값으로 설정
+            status: "FRIEND",
+          }),
         }
       );
 
@@ -115,14 +131,24 @@ const SendFriendRequest = () => {
     }
   };
 
+
   // 친구 요청을 거절하는 함수
   const handleRejectRequest = async (requestId) => {
     setRequesting(true);
     try {
       const response = await fetch(
-        `https://wanted66.r-e.kr/api/friend-request/reject/${requestId}`,
+        `https://wanted66.r-e.kr/api/friend`,
         {
-          method: "POST",
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${accessToken}`,
+          },
+          body: JSON.stringify({
+            senderId: requestId, // 또는 적절한 값으로 설정 "{보내는 쪽의 ID}"
+            receiverId: userEmail, // 또는 적절한 값으로 설정 "{받는 쪽의 ID}"
+            status: "REFUSAL",
+          }),
         }
       );
 
@@ -145,37 +171,37 @@ const SendFriendRequest = () => {
     }
   };
 
-  // 친구 요청을 서버로 보내는 함수
-  const handleSendRequest = async () => {
-    setRequesting(true);
-    try {
-      // 실제 API 엔드포인트가 없으므로, 이 부분은 나중에 수정 필요
-      const response = await fetch(
-        "https://wanted66.r-e.kr/api/friend-request",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ userEmail }),
-        }
-      );
+  // // 친구 요청을 서버로 보내는 함수
+  // const handleSendRequest = async () => {
+  //   setRequesting(true);
+  //   try {
+  //     // 실제 API 엔드포인트가 없으므로, 이 부분은 나중에 수정 필요
+  //     const response = await fetch(
+  //       "https://wanted66.r-e.kr/api/friend-request",
+  //       {
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //         body: JSON.stringify({ userEmail }),
+  //       }
+  //     );
 
-      if (!response.ok) {
-        const errorMessage = await response.text(); // 응답 내용을 텍스트로 읽기
-        throw new Error(
-          `HTTP error! status: ${response.status}, message: ${errorMessage}`
-        );
-      }
+  //     if (!response.ok) {
+  //       const errorMessage = await response.text(); // 응답 내용을 텍스트로 읽기
+  //       throw new Error(
+  //         `HTTP error! status: ${response.status}, message: ${errorMessage}`
+  //       );
+  //     }
 
-      message.success("친구 요청이 전송되었습니다.");
-    } catch (error) {
-      message.error("친구 요청을 보내는 데 실패했습니다.");
-      console.error("Failed to send friend request:", error.message); // 자세한 오류 메시지 로그
-    } finally {
-      setRequesting(false);
-    }
-  };
+  //     message.success("친구 요청이 전송되었습니다.");
+  //   } catch (error) {
+  //     message.error("친구 요청을 보내는 데 실패했습니다.");
+  //     console.error("Failed to send friend request:", error.message); // 자세한 오류 메시지 로그
+  //   } finally {
+  //     setRequesting(false);
+  //   }
+  // };
 
   if (loading) {
     return <Spin size="large" />;
@@ -197,7 +223,7 @@ const SendFriendRequest = () => {
             <div key={request.id} className="friend-request">
               <div className="friend-info">
                 <img
-                  src={request.profileImg}
+                  src={request.profileImage || profileImage}
                   alt="profile"
                   className="profile-image"
                 />

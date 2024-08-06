@@ -1,59 +1,64 @@
 import React, { useState, useEffect } from "react";
 import { Card, Avatar, Spin, message, Button, Tabs, Modal, Input } from "antd";
 import { UserOutlined } from "@ant-design/icons";
-import "./FriendList.css"; // 수정된 CSS 파일을 임포트
+import "./FriendList.css";
 
 const { TabPane } = Tabs;
 const { Search } = Input;
 
 const FriendList = () => {
   const [friends, setFriends] = useState([]);
-  const [filteredFriends, setFilteredFriends] = useState([]); // 필터링된 친구 목록 상태 추가
-  const [searchTerm, setSearchTerm] = useState(""); // 검색어 상태 추가
+  const [filteredFriends, setFilteredFriends] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedFriend, setSelectedFriend] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [addedFriends, setAddedFriends] = useState([]);
+  const [refreshToken, setRefreshToken] = useState("your_refresh_token"); // 리프레시 토큰 설정
+  const [accessToken, setAccessToken] = useState(null); // 액세스 토큰 상태 추가
+
+  // 액세스 토큰을 발급받는 함수
+  const fetchAccessToken = async (refreshToken) => {
+    try {
+      const response = await fetch("https://wanted66.r-e.kr/api/auth/issue/access", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${refreshToken}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("액세스 토큰을 발급받는 데 실패했습니다.");
+      }
+
+      const data = await response.json();
+      return data.accessToken;
+    } catch (error) {
+      console.error("액세스 토큰을 발급받는 데 오류가 발생했습니다:", error);
+      throw error;
+    }
+  };
 
   // 서버에서 친구 목록을 가져오는 함수
-  const fetchFriends = async () => {
+  const fetchFriends = async (token) => {
     try {
-      const exampleFriends = [
-        {
-          id: 1,
-          name: "John Doe",
-          nickname: "johnny", // 닉네임 추가
-          avatar: "https://randomuser.me/api/portraits/men/1.jpg",
-          title: "Software Engineer",
-          description: "Loves coding and coffee.",
+      const response = await fetch("https://wanted66.r-e.kr/api/friend", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
         },
-        {
-          id: 2,
-          name: "Jane Smith",
-          nickname: "janeart", // 닉네임 추가
-          avatar: "https://randomuser.me/api/portraits/women/2.jpg",
-          title: "Graphic Designer",
-          description: "Passionate about design and art.",
-        },
-        {
-          id: 3,
-          name: "Sam Wilson",
-          nickname: "sammy", // 닉네임 추가
-          avatar: "https://randomuser.me/api/portraits/men/3.jpg",
-          title: "Product Manager",
-          description: "Focused on delivering great products.",
-        },
-      ];
-      setFriends(exampleFriends);
-      setFilteredFriends(exampleFriends); // 초기 필터링된 목록 설정
-      // const response = await fetch("https://wanted66.r-e.kr/api/friends"); // 친구 목록 API 엔드포인트
-      // if (!response.ok) {
-      //   throw new Error("친구 목록을 가져오는 데 실패했습니다.");
-      // }
-      // const data = await response.json();
-      // setFriends(data);
-      // setFilteredFriends(data);
+      });
+
+      if (!response.ok) {
+        throw new Error("친구 목록을 가져오는 데 실패했습니다.");
+      }
+
+      const data = await response.json();
+      setFriends(data);
+      setFilteredFriends(data);
     } catch (error) {
       setError(error.message);
       message.error(error.message);
@@ -62,19 +67,56 @@ const FriendList = () => {
     }
   };
 
-  // 컴포넌트가 마운트될 때 친구 목록을 가져옵니다
-  useEffect(() => {
-    fetchFriends();
-  }, []);
+  // 친구를 닉네임으로 검색하는 함수
+  const fetchFriendsByNickname = async (nickname, token) => {
+    try {
+      const response = await fetch(`https://wanted66.r-e.kr/api/friend/${nickname}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+      });
 
-  // 친구 목록을 필터링하는 함수
+      if (!response.ok) {
+        throw new Error("친구 목록을 검색하는 데 실패했습니다.");
+      }
+
+      const data = await response.json();
+      setFilteredFriends(data);
+    } catch (error) {
+      setError(error.message);
+      message.error(error.message);
+    }
+  };
+
+  // 컴포넌트 마운트 시 액세스 토큰 발급 및 친구 목록 요청
   useEffect(() => {
-    setFilteredFriends(
-      friends.filter((friend) =>
-        friend.nickname.toLowerCase().includes(searchTerm.toLowerCase())
-      )
-    );
-  }, [searchTerm, friends]);
+    const getAccessToken = async () => {
+      try {
+        const token = await fetchAccessToken(refreshToken);
+        setAccessToken(token);
+      } catch (error) {
+        setError(error.message);
+        message.error(error.message);
+      }
+    };
+    getAccessToken();
+  }, [refreshToken]);
+
+  useEffect(() => {
+    if (accessToken) {
+      fetchFriends(accessToken);
+    }
+  }, [accessToken]);
+
+  useEffect(() => {
+    if (searchTerm && accessToken) {
+      fetchFriendsByNickname(searchTerm, accessToken);
+    } else {
+      setFilteredFriends(friends);
+    }
+  }, [searchTerm, friends, accessToken]);
 
   const handleDelete = (id) => {
     setFriends(friends.filter((friend) => friend.id !== id));
@@ -91,20 +133,42 @@ const FriendList = () => {
     setIsModalVisible(false);
   };
 
-  const handleAdd = (id) => {
+  const handleAdd =async  (id) => {
     const friendToAdd = friends.find((friend) => friend.id === id);
 
-    // 이미 추가된 친구인지 확인
     if (addedFriends.some((friend) => friend.id === id)) {
       message.info("이미 추가된 친구입니다.");
       return;
     }
 
     if (friendToAdd) {
-      setAddedFriends([...addedFriends, friendToAdd]);
-      message.success("친구가 추가되었습니다.");
+      try {
+        const response = await fetch("https://wanted66.r-e.kr/api/friend", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${accessToken}`,
+          },
+          body: JSON.stringify({
+            senderId: "SENDER_ID_HERE", // 보내는 쪽의 ID
+            receiverId: id, // 친구의 ID
+            status: "WAITING",
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error("친구 요청을 보내는 데 실패했습니다.");
+        }
+
+        setAddedFriends([...addedFriends, friendToAdd]);
+        message.success("친구가 추가되었습니다.");
+      } catch (error) {
+        message.error(error.message);
+        console.error("Failed to add friend:", error.message);
+      }
     }
   };
+
 
   const handleSearch = (value) => {
     setSearchTerm(value);
@@ -133,22 +197,22 @@ const FriendList = () => {
               >
                 <div className="friend-list-card-content">
                   <Avatar
-                    src={friend.avatar}
-                    icon={!friend.avatar && <UserOutlined />}
+                    src={friend.profileImage} // 필드 이름 수정
+                    icon={!friend.profileImage && <UserOutlined />}
                     size={64}
                     className="friend-list-avatar"
                   />
                   <Card.Meta
                     className="friend-list-card-meta"
                     title={friend.name}
-                    description={friend.description}
+                    description={friend.introduction} // 필드 이름 수정
                   />
                   <Button
                     type="primary"
                     className="friend-delete-button"
                     danger
                     onClick={(e) => {
-                      e.stopPropagation(); // 클릭 이벤트 전파 방지
+                      e.stopPropagation();
                       handleDelete(friend.id);
                     }}
                   >
@@ -166,7 +230,7 @@ const FriendList = () => {
               onSearch={handleSearch}
               enterButton
               className="friend-search-input"
-              style={{ height: "32px" }} // 입력 필드와 버튼의 높이를 맞추기 위해 설정
+              style={{ height: "32px" }}
             />
           </div>
           {filteredFriends.length === 0 ? (
@@ -180,21 +244,21 @@ const FriendList = () => {
               >
                 <div className="friend-list-card-content">
                   <Avatar
-                    src={friend.avatar}
-                    icon={!friend.avatar && <UserOutlined />}
+                    src={friend.profileImage} // 필드 이름 수정
+                    icon={!friend.profileImage && <UserOutlined />}
                     size={64}
                     className="friend-list-avatar"
                   />
                   <Card.Meta
                     className="friend-list-card-meta"
                     title={`${friend.nickname} (${friend.name})`}
-                    description={friend.description}
+                    description={friend.introduction} // 필드 이름 수정
                   />
                   <Button
                     type="primary"
                     className="friend-add-button"
                     onClick={(e) => {
-                      e.stopPropagation(); // 클릭 이벤트 전파 방지
+                      e.stopPropagation();
                       handleAdd(friend.id);
                     }}
                   >
@@ -216,15 +280,15 @@ const FriendList = () => {
         >
           <div className="friend-list-modal-content">
             <Avatar
-              src={selectedFriend.avatar}
-              icon={!selectedFriend.avatar && <UserOutlined />}
+              src={selectedFriend.profileImage} // 필드 이름 수정
+              icon={!selectedFriend.profileImage && <UserOutlined />}
               size={250}
               className="friend-list-modal-avatar"
             />
             <div className="friend-list-modal-info">
               <h3>{selectedFriend.name}</h3>
-              <h4>{selectedFriend.title || "No Title"}</h4>
-              <p>{selectedFriend.description || "No Description"}</p>
+              <h4>{selectedFriend.designation || "No Title"}</h4> {/* 필드 이름 수정 */}
+              <p>{selectedFriend.introduction || "No Description"}</p> {/* 필드 이름 수정 */}
             </div>
           </div>
         </Modal>

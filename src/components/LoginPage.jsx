@@ -15,7 +15,7 @@ const LoginPage = () => {
   // 카카오 로그인 페이지로 리다이렉트
   const handleKakaoLogin = () => {
     window.location.href =
-      "https://kauth.kakao.com/oauth/authorize?client_id=YOUR_KAKAO_CLIENT_ID&redirect_uri=YOUR_REDIRECT_URI&response_type=code";
+    "https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=5d3f977e28b7baf6825e7f34c62fd79a&redirect_uri=http://127.0.0.1:3000/callback";
   };
 
   return (

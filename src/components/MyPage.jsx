@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, Modal, List, Typography, Upload, message } from "antd";
 import profileImage from "../assets/profile_image.png";
@@ -10,42 +10,71 @@ const { Text } = Typography;
 const MyPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentTitle, setCurrentTitle] = useState("범죄왕(칭호)");
-  const [titles, setTitles] = useState([
-    "범죄왕(칭호)",
-    "수사왕(칭호)",
-    "탐정왕(칭호)",
-    "정보왕(칭호)",
-  ]);
-  const [profilePic, setProfilePic] = useState(profileImage); // 프로필 이미지 상태 추가
+  const [titles, setTitles] = useState([]);
+  const [profilePic, setProfilePic] = useState(profileImage);
+  const [newTitle, setNewTitle] = useState(""); // 칭호 추가용 상태
 
   const navigate = useNavigate();
 
-  const handleReportsListClick = () => {
-    navigate("/reports");
-  };
+  useEffect(() => {
+    // 컴포넌트 마운트 시 칭호 목록 가져오기
+    const fetchTitles = async () => {
+      try {
+        const response = await fetch("https://wanted66.r-e.kr/api/user/designation", {
+          method: "GET",
+        });
 
-  const showModal = () => {
-    setIsModalOpen(true);
-  };
+        if (!response.ok) {
+          throw new Error("Failed to fetch titles");
+        }
 
-  const handleOk = () => {
-    setIsModalOpen(false);
-  };
+        const data = await response.json();
+        setTitles(data);
+        setCurrentTitle(data[0]); // 기본 칭호를 첫 번째 칭호로 설정
+      } catch (error) {
+        message.error("칭호를 가져오는 데 실패했습니다.");
+      }
+    };
 
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
+    fetchTitles();
+  }, []);
 
-  const changeTitle = async (title) => {
+  const fetchAccessToken = async (refreshToken) => {
     try {
+      const response = await fetch("https://wanted66.r-e.kr/api/auth/issue/access", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${refreshToken}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch access token");
+      }
+
+      const data = await response.json();
+      return data.accessToken;
+    } catch (error) {
+      console.error("Error fetching access token:", error);
+      throw error;
+    }
+  };
+
+  const changeTitle = async (newTitle) => {
+    const refreshToken = "your-refresh-token"; // 실제 Refresh Token으로 교체
+
+    try {
+      const accessToken = await fetchAccessToken(refreshToken);
+
       const response = await fetch(
-        "https://wanted66.r-e.kr/api/user/update-title",
+        `https://wanted66.r-e.kr/api/user/designation/${encodeURIComponent(newTitle)}`,
         {
-          method: "POST",
+          method: "PATCH",
           headers: {
             "Content-Type": "application/json",
+            "Authorization": `Bearer ${accessToken}`, // 발급받은 Access Token을 사용
           },
-          body: JSON.stringify({ title }),
         }
       );
 
@@ -53,7 +82,7 @@ const MyPage = () => {
         throw new Error("Failed to update title");
       }
 
-      setCurrentTitle(title);
+      setCurrentTitle(newTitle);
       message.success("칭호가 업데이트되었습니다.");
     } catch (error) {
       message.error("칭호를 업데이트하는 데 실패했습니다.");
@@ -62,23 +91,42 @@ const MyPage = () => {
     }
   };
 
-  const handleProfilePicChange = async (info) => {
-    if (info.file.status === "done") {
-      // 업로드 성공 시 서버에서 새로운 이미지 URL을 반환한다고 가정
-      const newProfilePic = info.file.response?.url; // 서버에서 반환된 이미지 URL
-      setProfilePic(newProfilePic);
+  const handleProfilePicChange = async (file) => {
+    const refreshToken = "your-refresh-token"; // 실제 Refresh Token으로 교체
+
+    try {
+      const accessToken = await fetchAccessToken(refreshToken);
+
+      const formData = new FormData();
+      formData.append("image", file);
+
+      const response = await fetch("https://wanted66.r-e.kr/api/user/image", {
+        method: "PATCH",
+        body: formData,
+        headers: {
+          "Authorization": `Bearer ${accessToken}`, // 발급받은 Access Token을 사용
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to update profile picture");
+      }
+
+      const data = await response.json();
+      setProfilePic(data.url);
       message.success("프로필 사진이 업데이트되었습니다.");
-    } else if (info.file.status === "error") {
+    } catch (error) {
       message.error("프로필 사진 업로드에 실패했습니다.");
     }
   };
 
   const uploadProps = {
-    action: "https://wanted66.r-e.kr/api/user/update-profile-picture",
+    customRequest: async ({ file }) => {
+      await handleProfilePicChange(file);
+    },
     showUploadList: false,
-    onChange: handleProfilePicChange,
     headers: {
-      Authorization: "Bearer YOUR_ACCESS_TOKEN", // 필요한 경우 인증 헤더 추가
+      Authorization: "Bearer YOUR_ACCESS_TOKEN",
     },
   };
 
@@ -96,32 +144,23 @@ const MyPage = () => {
           </Upload>
         </div>
         <h1 className="name">윤주원</h1>
-        <p className="title" onClick={showModal}>
+        <p className="title" onClick={() => setIsModalOpen(true)}>
           {currentTitle}
         </p>
       </div>
       <div className="history-section">
         <h2>이력</h2>
         <ul>
-          <li className="list-item-button" onClick={handleReportsListClick}>
+          <li className="list-item-button" onClick={() => navigate("/reports")}>
             제보 이력
           </li>
-          <li
-            className="list-item-button"
-            onClick={() => handleHistoryClick("/bounties")}
-          >
+          <li className="list-item-button" onClick={() => navigate("/bounties")}>
             현상금 이력
           </li>
-          <li
-            className="list-item-button"
-            onClick={() => handleHistoryClick("/wanted")}
-          >
+          <li className="list-item-button" onClick={() => navigate("/wanted")}>
             수배 등록 이력
           </li>
-          <li
-            className="list-item-button"
-            onClick={() => handleHistoryClick("/sendFriendRequest")}
-          >
+          <li className="list-item-button" onClick={() => navigate("/sendFriendRequest")}>
             친구 요청 이력
           </li>
         </ul>
@@ -129,8 +168,8 @@ const MyPage = () => {
       <Modal
         title="칭호 정보"
         open={isModalOpen}
-        onOk={handleOk}
-        onCancel={handleCancel}
+        onOk={() => setIsModalOpen(false)}
+        onCancel={() => setIsModalOpen(false)}
         footer={null}
       >
         <List

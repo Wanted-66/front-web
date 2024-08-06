@@ -1,13 +1,17 @@
 import React from "react";
 import { css } from "@emotion/css";
 import "./PostDetail.css";
+
 const CommentList = ({ comments }) => (
   <div className="comments-list">
     {comments.length > 0 ? (
       comments.map((comment, index) => (
         <div key={index} className={commentStyle}>
-          <p className={commentTextStyle}>{comment.text}</p>
-          <span className={userNameStyle}>{comment.user}</span>
+          <p className={commentTextStyle}>{comment.content}</p>
+          <div className={commentInfoStyle}>
+            <span className={userNameStyle}>{comment.username}</span>
+            <span className={dateStyle}>{comment.writeDate}</span>
+          </div>
         </div>
       ))
     ) : (
@@ -27,15 +31,27 @@ const commentStyle = css`
     border-bottom: none;
   }
 `;
+
 const commentTextStyle = css`
   flex: 1;
 `;
 
+const commentInfoStyle = css`
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  color: #888;
+`;
+
 const userNameStyle = css`
   color: #888;
-  font-size: 0.9rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 `;
+
+const dateStyle = css`
+  color: #888;
+`;
+
 export default CommentList;

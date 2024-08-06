@@ -22,6 +22,7 @@ import SendFriendRequest from "./components/SendFriendRequest";
 import FriendList from "./components/FriendList";
 import MyReportList from "./components/MyReportList";
 import Result from "./components/Result";
+import CallBack from "./components/CallBack";
 
 function App() {
   const [messageApi, contextHolder] = message.useMessage();
@@ -58,6 +59,7 @@ function App() {
             <Route path="/myList" element={<MyReportList />} />
             <Route path="/result" element={<Result />} />
             <Route path="/list/:userEmail" element={<ListComponent />} />
+            <Route path="/callback" element={<CallBack/>} />
           </Routes>
           <BottomNavigationBar userEmail={userEmail}></BottomNavigationBar>
         </Router>
